@@ -33,6 +33,9 @@ dependencies {
 	
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation files('/Users/ealarcop/Projects/java/java_isobit/build/libs/isobit.jar')
+	implementation files('E:/projects/java/java_isobit/build/isobit.jar')
+	implementation files('E:\\projects\\java\\java_isobit\\build\\libs\\isobit.jar')
+	
 	/*
 	implementation files('E:/projects/java/spring/isobit/build/libs/isobit.jar')
 	implementation files('E:/projects/java/output/ib-report/dist/ib-report.jar')
@@ -69,8 +72,8 @@ group 'org.isobit'
 version '1.0.0-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 compileJava {

@@ -408,17 +408,16 @@ public class Resource {
 
 				if (p instanceof Map) {
 					m.putAll((Map) p);
-
 					m.put(DataSource.class, m.remove("data"));
 					jsonb.toJson(m.get(DataSource.class), new FileOutputStream(file));
 					m.put(DataSource.class, file);
 					System.out.println(m.get(DataSource.class));
 					System.out.println(m.keySet());
-				}
-				if (p instanceof List) {
+				}else
+				/*if (p instanceof List) {
 					System.out.println("===="+new ObjectMapper().writeValueAsString(p));
 					m.put(DataSource.class, (List) p);
-				} else
+				} else*/
 					m.put(DataSource.class, file);
 
 			} catch (IOException e) {

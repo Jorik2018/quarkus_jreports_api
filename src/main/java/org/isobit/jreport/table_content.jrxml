@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="525" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="525" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e8413022-9c18-4663-8eea-ba12de6c2c8f">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="78"/>
+	<style name="style1">
+		<box topPadding="5" bottomPadding="5">
+			<bottomPen lineWidth="0.5" lineStyle="Dashed"/>
+		</box>
+	</style>
+	<field name="level" class="java.lang.Number"/>
+	<field name="text" class="java.lang.String"/>
+	<field name="page" class="java.lang.Number"/>
+	<field name="reference" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="22" width="525" height="20" uuid="46165f82-0e8b-42f4-8014-6e399f57c45d"/>
+				<textElement textAlignment="Center" markup="html">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TABLA DE CONTENIDO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField isStretchWithOverflow="true" hyperlinkType="LocalAnchor">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="0" y="0" width="490" height="10" uuid="7ad539ef-3272-47c1-9242-d58af9a765ab">
+					<printWhenExpression><![CDATA[$F{level}.intValue()<2]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{reference}]]></hyperlinkAnchorExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="490" y="0" width="35" height="10" uuid="715adf2b-0a12-4c4e-a391-ae395c07aef7"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" markup="none">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{page}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" hyperlinkType="LocalAnchor">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="35" y="0" width="455" height="10" uuid="37ef5afa-9062-4217-9c0c-54f37a68e97a">
+					<printWhenExpression><![CDATA[$F{level}.intValue()==2]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{reference}]]></hyperlinkAnchorExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" hyperlinkType="LocalAnchor">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="70" y="0" width="420" height="10" uuid="209dd963-4e93-4c6a-a4dc-deb7976dec44">
+					<printWhenExpression><![CDATA[$F{level}.intValue()==3]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{reference}]]></hyperlinkAnchorExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" hyperlinkType="LocalAnchor">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="105" y="0" width="385" height="10" uuid="09b6aadf-2ab8-473f-9f82-a00ef944f4d1">
+					<printWhenExpression><![CDATA[$F{level}.intValue()==4]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{reference}]]></hyperlinkAnchorExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" hyperlinkType="LocalAnchor">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="138" y="0" width="352" height="10" uuid="ea36030f-0434-4796-b6c0-61fa43bc3d79">
+					<printWhenExpression><![CDATA[$F{level}.intValue()==5]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{text}]]></textFieldExpression>
+				<hyperlinkAnchorExpression><![CDATA[$F{reference}]]></hyperlinkAnchorExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

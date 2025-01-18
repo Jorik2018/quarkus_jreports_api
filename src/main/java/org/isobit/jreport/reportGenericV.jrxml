@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="525" leftMargin="35" rightMargin="35" topMargin="30" bottomMargin="30" uuid="3dbefd17-f63f-4fe9-8af4-4e8ace179120">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="padding-5">
+		<box topPadding="5" leftPadding="0" bottomPadding="5" rightPadding="0"/>
+	</style>
+	<style name="padding-5_1">
+		<box topPadding="5" leftPadding="5" bottomPadding="5" rightPadding="0"/>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TITLE_2" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["AUTOEVALUACION EDUCACION PRIMARIA 2013-II"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_DETAIL" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="COMPANY_LOGO" class="java.lang.String"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["UNIVERSIDAD NACIONAL DEL SANTA"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TITLE_1" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["OFICINA CENTRAL DE EVALUACION DE LA CALIDAD Y ACREDITACION"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_OFFSET" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select top 1 f.*
+from sgc_autoevaluacion_fuente fe
+
+left outer join sgc_fuente f on f.id_fuente=fe.id_fuente
+left outer join sgc_estandar e on e.id_estandar=fe.id_estandar]]>
+	</queryString>
+	<field name="id_fuente" class="java.lang.Integer"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="codigo" class="java.lang.String"/>
+	<field name="fuente_verificacion" class="java.lang.String"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="fecha_reg" class="java.sql.Timestamp"/>
+	<field name="delta" class="java.lang.Integer"/>
+	<group name="id_fuente" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{id_fuente}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="142" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="84" height="94" isRemoveLineWhenBlank="true" uuid="ef50d60a-7d21-40a7-96c7-410ffe2bce8a">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<image hAlign="Center" vAlign="Middle" onErrorType="Icon">
+				<reportElement mode="Opaque" x="8" y="11" width="70" height="75" isRemoveLineWhenBlank="true" uuid="26d89602-05fe-46c9-a2cf-2df32466c39a">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{COMPANY_LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="style1" x="84" y="0" width="441" height="34" isRemoveLineWhenBlank="true" uuid="6d6a6bda-bd7b-4346-b36d-9f471302e6df">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="style1" x="84" y="34" width="441" height="30" isRemoveLineWhenBlank="true" uuid="f86532a0-698c-447b-add1-073c29f6a7a7">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITLE_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="style1" x="84" y="64" width="441" height="30" isRemoveLineWhenBlank="true" uuid="b758afa0-56ee-40c2-b885-57d894f9cc4c">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1&&
+$P{TITLE_2}.length()<=50]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITLE_2}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="125" width="525" height="1" isRemoveLineWhenBlank="true" uuid="ff3c4ac3-4a6b-4f32-8b7f-c203bafc26ce">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="style1" x="84" y="65" width="441" height="30" isRemoveLineWhenBlank="true" uuid="35331e1a-85ab-4bbf-bdee-511faece4876">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1&&
+$P{TITLE_2}.length()>50]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITLE_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="125" width="525" height="17" isRemoveLineWhenBlank="true" uuid="1abf1c31-de75-4a9e-9ffb-f619c575e55c">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement x="0" y="95" width="525" height="30" isRemoveLineWhenBlank="true" uuid="6e3c8801-048c-46c0-9617-58b93ef931b7"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="padding-5_1" stretchType="RelativeToTallestObject" mode="Transparent" x="30" y="0" width="222" height="30" isRemoveLineWhenBlank="true" uuid="7c27b059-fc7a-4e11-97bc-85d53ab755e2">
+						<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Arial" size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{COMPANY_NAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="padding-5" stretchType="RelativeToTallestObject" mode="Opaque" x="252" y="0" width="273" height="30" isRemoveLineWhenBlank="true" uuid="37fd071c-d1ea-45a3-a602-470c736ea5e9">
+						<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1&&$P{TITLE_2}.length()<=50
+&&$F{fuente_verificacion}.length()<=50]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{TITLE_2}
++"\n"+$F{fuente_verificacion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="padding-5" stretchType="RelativeToTallestObject" mode="Transparent" x="252" y="0" width="273" height="30" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="78c282da-90d6-41c0-a29a-acb32ab74f11">
+						<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1&&($P{TITLE_2}.length()>50
+||$F{fuente_verificacion}.length()>50)]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+						<font fontName="Arial" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<B>"+$P{TITLE_2}+"</B>"
++"\n"+$F{fuente_verificacion}]]></textFieldExpression>
+				</textField>
+				<image hAlign="Center" vAlign="Middle" onErrorType="Icon">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="30" height="30" isRemoveLineWhenBlank="true" uuid="d32cd20d-cdf3-4003-9cd7-115abfd19ac6">
+						<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})>1]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[$P{COMPANY_LOGO}]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="38" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="18" width="525" height="20" uuid="e0d90ea8-59a4-429e-8258-56e89c7d3223"/>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<dataSourceExpression><![CDATA[$P{REPORT_DETAIL}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[org.jsuns.jreport.JR.getPath($P{SUBREPORT_DIR})]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="525" height="18" isRemoveLineWhenBlank="true" backcolor="#FF9999" uuid="95023a6e-ba0a-4c9e-82e8-17350aedd060">
+					<printWhenExpression><![CDATA[($V{PAGE_NUMBER}+$P{REPORT_OFFSET})==1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fuente_verificacion}!=null?
+($F{fuente_verificacion}+"\n"):null]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="18" width="378" height="18" uuid="47720b82-cf0d-4715-9311-2d5b18c4fc45"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITLE_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="18" width="147" height="18" uuid="da4b01b4-bfb5-4b7c-9eab-cbda508e2e7f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PAGINA "+($V{PAGE_NUMBER}+$P{REPORT_OFFSET})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="18" width="525" height="1" uuid="b7490715-2651-4619-8550-d2b7730382d7"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

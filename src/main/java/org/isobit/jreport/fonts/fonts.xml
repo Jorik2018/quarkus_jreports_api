@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<fontFamilies>
+  <fontFamily name="Arial">
+    <normal>org/isobit/jreport/fonts/arial/arial.ttf</normal>
+    <bold>org/isobit/jreport/fonts/arial/arialbd.ttf</bold>
+    <pdfEncoding>Cp1252</pdfEncoding>
+    <pdfEmbedded>true</pdfEmbedded>
+    <exportFonts>
+    </exportFonts>
+  </fontFamily>
+  <!--fontFamily name="Arial-Bold-Italic">
+    <boldItalic>arialbd.ttf</boldItalic>
+    <pdfEncoding>Cp1252</pdfEncoding>
+    <pdfEmbedded>true</pdfEmbedded>
+    <exportFonts>
+    </exportFonts>
+  </fontFamily-->
+</fontFamilies>

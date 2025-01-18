@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-rest-client-jsonb'
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy'
+    //implementation 'org.jboss.resteasy:resteasy-client'
+    // https://mvnrepository.com/artifact/io.quarkus/quarkus-rest-client
+	implementation 'io.quarkus:quarkus-rest-client'
+    
+    implementation 'com.google.code.gson:gson:2.10.1'
+    /*implementation 'org.jboss.resteasy:resteasy-multipart-provider'*/
+	implementation 'io.quarkus:quarkus-resteasy-multipart'
+	implementation 'io.quarkus:quarkus-resteasy-jsonb'
+	//implementation 'net.sf.jasperreports:jasperreports:6.19.1'
+	// https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
+	implementation 'net.sf.jasperreports:jasperreports:6.21.3'
+
+	implementation 'com.itextpdf:itextpdf:5.5.13.3'
+	implementation 'com.lowagie:itext:4.2.1'
+
+	implementation 'ar.com.fdvs:DynamicJasper:5.3.6'
+	implementation 'io.quarkus:quarkus-jsonb:2.10.1.Final'
+	
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+	implementation files('/Users/ealarcop/Projects/java/java_isobit/build/libs/isobit.jar')
+	/*
+	implementation files('E:/projects/java/spring/isobit/build/libs/isobit.jar')
+	implementation files('E:/projects/java/output/ib-report/dist/ib-report.jar')
+	implementation files('E:/projects/java/lib/itext-4.2.1.jar')
+	implementation files('E:/projects/java/rh/dist/rh.jar')
+	implementation files('E:/projects/java/directory/dist/directory.jar')
+	
+	implementation files('E:/projects/java/lib/commons-collections4-4.2.jar')
+	implementation files('E:/projects/java/lib/poi-4.1.0/poi-4.1.0.jar')
+	implementation files('E:/projects/java/lib/poi-4.1.0/poi-ooxml-4.1.0.jar')
+	implementation files('E:/projects/java/lib/poi-4.1.0/poi-ooxml-schemas-4.1.0.ja')
+	implementation files('E:/projects/java/lib/poi-4.1.0/poi-scratchpad-4.1.0.jar')
+	implementation files('E:/projects/java/lib/poi-4.1.0/ooxml-lib/xmlbeans-3.1.0.jar')
+	implementation files('E:/projects/java/lib/poi-4.1.0/lib/commons-compress-1.18.jar')
+	*/
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+implementation 'org.apache.commons:commons-collections4:4.4'
+
+// https://mvnrepository.com/artifact/org.apache.poi/poi
+implementation 'org.apache.poi:poi:5.2.2'
+// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+implementation 'org.apache.poi:poi-ooxml:5.2.2'
+// https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans
+implementation 'org.apache.xmlbeans:xmlbeans:5.0.3'
+// https://mvnrepository.com/artifact/org.apache.commons/commons-compress
+implementation 'org.apache.commons:commons-compress:1.21'
+
+	
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+group 'org.isobit'
+version '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}

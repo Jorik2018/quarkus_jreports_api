@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reportes Dinamicos</title>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<style>
+	label {
+		font-weight: bold;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<H2>REPORTES DINAMICOS</H2>
+		<div style="display: inline-block; width: 49%">
+			<label>Tipo:</label>
+			<div>
+				XLS <input v-model="extension" type="radio" value="xls" /> PDF <input
+					v-model="extension" type="radio" value="pdf" />
+			</div>
+		</div>
+		<textarea v-model="output" rows="20" style="width: 100%"></textarea>
+		<div style="text-align: center">
+			<button v-on:click="send(1)">DESCARGAR DESDE FORMATO JSON</button>
+			<button v-on:click="send(0)">DESCARGAR DATOS DE SERVIDOR</button>
+		</div>
+	</div>
+	<script>
+		new Vue({
+			el:'.container',
+			data(){return {extension:'pdf',o:{
+				title:'Reporte',
+				columns:[
+					{name:'id',type:'int',width:50,horizontalAlign:'center',pattern:'000'},
+					{name:'name',type:'string',width:100},
+					{name:'price',type:'float',width:80,horizontalAlign:'right',pattern:'0,00'},
+				],
+				data:[
+					{id:1,name:'LAPTOP',price:2030.7},
+					{id:2,name:'PRINTER',price:450.0},
+					{id:3,name:'RADIO',price:110.5}
+				]
+			
+			},file:null,baseAPI:'/api/jreport/',output:''};},
+			mounted(){ this.output=JSON.stringify(this.o,null, 2);},
+			methods:{
+				progressHandler(e){
+					var percent = Math.round((e.loaded / e.total) * 100);
+					console.log( percent + "% uploaded... please wait");
+				},
+				completeHandler(e){
+					const url = window.URL.createObjectURL(new Blob([e.target.response]));
+					var cfg={};
+					const link = document.createElement('a');
+					link.href = url;
+					headers={};
+					e.target.getAllResponseHeaders().split('\n').forEach(e=>{
+						var t=e.split(': ');
+						headers[t[0]]=t[1];
+					});
+					var disposition=headers['content-disposition'];
+					if (disposition && disposition.indexOf('attachment') !== -1) {
+						var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+						var matches = filenameRegex.exec(disposition);
+						if (matches != null && matches[1]) { 
+						  cfg.fileName = matches[1].replace(/['"]/g, '').trim();
+						}
+					}
+					link.setAttribute('download', cfg.fileName);
+					document.body.appendChild(link);
+					link.click();
+				},
+				send(i){
+					const formData = new FormData();
+					var me=this;
+					formData.append('extension', me.extension);
+					if(i){
+						formData.append("file",new Blob([JSON.stringify(me.o)], { type: "text/plain" }),"data.json");
+					   	formData.append("filename", "data.json");
+					}
+					var ajax = new XMLHttpRequest();
+					ajax.upload.addEventListener("progress", me.progressHandler, false);
+					ajax.addEventListener("load", me.completeHandler, false);
+					//ajax.addEventListener("error", errorHandler, false);
+					//ajax.addEventListener("abort", abortHandler, false);
+					ajax.open("POST", me.baseAPI+'/dynamic');
+					ajax.responseType = 'blob';
+					ajax.send(formData);
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="525" pageHeight="802" columnWidth="525" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2a396d07-4675-4751-82c0-1dfbeca6bafa">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1" forecolor="#000000">
+		<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<parameter name="codigo" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="factor" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="id_indicador" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\proyecto\\sgc\\src\\org\\jsuns\\oceda\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="datasources" class="java.util.Map" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.HashMap()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CHAPTER_COUNT" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="TOC" class="org.jsuns.swing.util.dTableContent" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{TOC}!=null?$P{TOC}:new org.jsuns.swing.util.dTableContent()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 'P' tipo,sgc_fuente_parte.* from sgc_fuente_parte]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="id_fuepar" class="java.lang.Integer"/>
+	<field name="id_autoevaluacion" class="java.lang.Integer"/>
+	<field name="id_fuente" class="java.lang.Integer"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="peso" class="java.lang.Integer"/>
+	<field name="pagina" class="java.lang.Integer"/>
+	<variable name="npage" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{pagina}!=null&&$F{pagina}.intValue()>0?1:0]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="npage" isStartNewPage="true">
+		<groupExpression><![CDATA[$V{npage}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<elementGroup/>
+			<elementGroup/>
+			<subreport>
+				<reportElement positionType="Float" mode="Transparent" x="18" y="10" width="489" height="18" isPrintInFirstWholeBand="true" uuid="31779653-b661-48b9-9c4b-ee918ea3199f">
+					<printWhenExpression><![CDATA[!"T".equals($F{tipo})&&!($F{pagina}!=null&&$F{pagina}-10==0)]]></printWhenExpression>
+				</reportElement>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<subreportParameter name="id_especialidad"/>
+				<dataSourceExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("R"+$F{id_fuepar})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[org.jsuns.jreport.JR.getPath($F{direccion})]]></subreportExpression>
+			</subreport>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" mode="Transparent" x="18" y="10" width="489" height="18" isPrintWhenDetailOverflows="true" uuid="2254bea6-0d17-496b-aba5-0908e1225bfb">
+					<printWhenExpression><![CDATA["T".equals($F{tipo})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="18" y="0" width="489" height="10" isRemoveLineWhenBlank="true" uuid="0de1ba0b-4171-40c2-84e2-457e92bbef75">
+					<printWhenExpression><![CDATA[$F{titulo}!=null&&$F{titulo}.length()>0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titulo}!=null?(($P{CHAPTER_COUNT}!=null?($P{CHAPTER_COUNT}+"."):"")+($V{PAGE_COUNT}>1?"\n":"")+
+
+$P{TOC}.add(
+
+$F{titulo},
+
+    1,
+
+    $F{titulo},
+
+    $V{PAGE_NUMBER},
+
+    $F{titulo}
+)
+
++"\n"):null]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" mode="Transparent" x="0" y="10" width="525" height="18" isPrintInFirstWholeBand="true" uuid="eb5892e2-dd29-436f-a00b-51ba2367b059">
+					<printWhenExpression><![CDATA[!"T".equals($F{tipo})&&($F{pagina}!=null&&$F{pagina}==10)]]></printWhenExpression>
+				</reportElement>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<subreportParameter name="id_especialidad"/>
+				<dataSourceExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("R"+$F{id_fuepar})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[org.jsuns.jreport.JR.getPath($F{direccion})]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

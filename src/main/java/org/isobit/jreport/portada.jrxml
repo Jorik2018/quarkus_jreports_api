@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="25" bottomMargin="25" isSummaryWithPageHeaderAndFooter="true" uuid="bb2ccef9-5455-4823-8a3f-2f37747bdb5d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="225"/>
+	<style name="style1">
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="style1_1">
+		<box topPadding="3" leftPadding="3" bottomPadding="3" rightPadding="3">
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.0"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="style2"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["G:\\proyecto\\oceca\\src\\java\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="descripcion" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="preguntas" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
+	<parameter name="respuestas" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
+	<parameter name="LOGO_DIR" class="java.io.File" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.io.File("G:\\proyecto\\oceca\\web\\images\\u del santa.jpg")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_LOGO" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="TITLE_2" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="DATE_FORMAT" class="java.text.SimpleDateFormat" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("MMMMM '-' yyyy")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_NAME" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["UNIVERSIDAD NACIONAL DEL SANTA"]]></defaultValueExpression>
+	</parameter>
+	<field name="fuente_verificacion" class="java.lang.String"/>
+	<variable name="toc2" class="java.lang.Integer" resetType="Page" incrementType="Page">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="593">
+			<image scaleImage="RetainShape" hAlign="Center" isUsingCache="false" onErrorType="Icon">
+				<reportElement x="100" y="157" width="335" height="237" uuid="65e8eddf-1a6b-45cf-b715-76ce5f9b0604"/>
+				<imageExpression><![CDATA[$P{COMPANY_LOGO}]]></imageExpression>
+			</image>
+			<frame>
+				<reportElement x="0" y="417" width="535" height="122" uuid="fd16e5bf-2d81-46c3-856d-559afcf8444f"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="0" width="534" height="35" uuid="dcc5ac70-9cbe-4c34-bfa4-9d69bfabf66b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font size="23" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{TITLE_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="0" y="35" width="534" height="20" uuid="6f30f28a-77f2-477f-837f-ceea79400500"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
+					<textFieldExpression><![CDATA[$F{fuente_verificacion}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="535" height="16" uuid="ab3b5a03-8f81-4dd3-bb67-dfb57e1adc36"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="535" height="15" uuid="0822ffc8-3f27-41a1-bba8-23220dbb95ec"/>
+				<textElement textAlignment="Center" markup="none"/>
+				<textFieldExpression><![CDATA[$P{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="535" height="20" uuid="4e4f1544-1185-41c0-a824-14ae97450f5d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{DATE_FORMAT}.format(new java.util.Date()).toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

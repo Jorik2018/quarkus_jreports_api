@@ -35,6 +35,7 @@ dependencies {
 	implementation files('/Users/ealarcop/Projects/java/java_isobit/build/libs/isobit.jar')
 	implementation files('E:/projects/java/java_isobit/build/isobit.jar')
 	implementation files('E:\\projects\\java\\java_isobit\\build\\libs\\isobit.jar')
+	implementation files('C:/projects/java/spring/java_isobit/build/libs/isobit.jar')
 	
 	/*
 	implementation files('E:/projects/java/spring/isobit/build/libs/isobit.jar')

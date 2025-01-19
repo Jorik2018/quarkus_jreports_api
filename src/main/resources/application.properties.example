@@ -1,4 +1,5 @@
 quarkus.http.cors=true
 quarkus.http.port=
 quarkus.http.cors.origins=*
+quarkus.http.cors.exposed-headers=content-disposition
 uploadDir=

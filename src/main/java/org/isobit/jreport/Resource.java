@@ -406,7 +406,7 @@ public class Resource {
 				Jsonb jsonb = JsonbBuilder.create();
 				Object p = jsonb.fromJson(new FileInputStream(file), Object.class);
 
-if(data.orihinal!=null){
+if(data.original!=null){
 m.put(DataSource.class, file);
 }else
 				if (p instanceof Map) {

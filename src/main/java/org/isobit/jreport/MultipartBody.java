@@ -24,6 +24,10 @@ public class MultipartBody {
     @FormParam("filename")
     @PartType(MediaType.TEXT_PLAIN)
     public String filename;
+
+    @FormParam("orihinal")
+    @PartType(MediaType.TEXT_PLAIN)
+    public String orihinal;
     
     @FormParam("output")
     @PartType(MediaType.TEXT_PLAIN)

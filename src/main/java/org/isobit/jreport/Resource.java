@@ -201,35 +201,19 @@ public class Resource {
 						Map<?, ?> jsonMap = (Map<?, ?>) parsed;
 
 						for (Map.Entry<?, ?> entry : jsonMap.entrySet()) {
-							parameters.put(
-									entry.getKey(),
-									entry.getValue());
+							parameters.put(entry.getKey(),entry.getValue());
 						}
 
-						Object data = parameters.remove(
-								"data");
+						Object data = parameters.remove("data");
 
-						/*
-						 * Jasper espera el datasource
-						 * como archivo JSON.
-						 */
-						try (
-								OutputStream out = Files.newOutputStream(
-										tempFile)) {
-							jsonb.toJson(
-									data,
-									out);
+						try (OutputStream out = Files.newOutputStream(tempFile)) {
+							jsonb.toJson(data, out);
 						}
 
-						parameters.put(
-								DataSource.class,
-								file);
+						parameters.put(DataSource.class, tempFile);
 
 					} else if (parsed instanceof List) {
-
-						parameters.put(
-								DataSource.class,
-								parsed);
+						parameters.put(DataSource.class, parsed);
 
 					} else {
 

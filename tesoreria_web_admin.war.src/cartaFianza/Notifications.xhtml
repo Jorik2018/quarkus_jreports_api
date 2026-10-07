@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{notifyController.getNotifyList(viewParam.set('danger',1).p)}" var="nl"/>
+        <style>
+            #notifications .ui-widget-header {
+                border: 1px solid #35bdbd;
+                background: #c4c4c4 linear-gradient(top,rgba(255,255,255,0.8),rgba(255,255,255,0));
+                background: #c4c4c4 -moz-linear-gradient(top,rgba(255,255,255,0.8),rgba(255,255,255,0));
+                color: #333;
+                font-weight: bold;
+                font-size: small;
+                background-color: azure;
+                text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+            }
+            #notifications .x-item{
+                border:1px solid #CCC;
+
+                margin: 0px;
+            }
+            #notifications a{
+                display: block;padding: 5px;
+                text-decoration: none;
+                color: black;
+            }
+            #notifications a:hover{
+                background-color: #FFFF99;
+                color: black;
+            }
+        </style>
+        <v-panel id="notifications" rendered="#{not empty nl}" style="display:none;position:absolute;top:0px;width:300px; z-index: 1000" 
+                 header="#{bundle.Notifications}">
+            <ui:repeat value="#{nl}" var="i">
+                <div class="x-item">
+                    <a href="#{i[1]}">
+                        #{i[0]}
+                    </a>
+                </div>
+            </ui:repeat><script>
+                /*$(function () {
+                    var l = $('<li class="ui-menuitem ui-widget ui-corner-all" style="float:right"><a href="#" class="ui-menuitem-link ui-submenu-link ui-corner-all ui-icon x-notifications" style="width:24px"></a></li>');
+                    $('.ui-icon-gear').closest('li').after(l);
+                    var n = $('#notifications');
+                    n.find('.ui-panel-content').css('overflow-y', 'auto').after(n.find('.x-bottom'));
+                    l.click(function () {
+                        n.fadeToggle();
+                    });
+                    var ff = function () {
+                        n.css('top', l.height()).css('left', l.position().left - n.width() + l.width());
+                        n.find('.ui-panel-content');
+                    }
+
+                    _.resizer.push(ff);
+
+                    //mask();
+                });*/
+            </script>
+        </v-panel>
+
+
+
+    </ui:composition>
+
+</html>

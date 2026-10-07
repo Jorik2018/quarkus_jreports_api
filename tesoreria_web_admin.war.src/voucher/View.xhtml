@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition>
+
+        <c:set value="#{voucherController.selected}" var="o"/>
+        <p:dialog id="VoucherView" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewWarrantTitle}">
+            <h:form id="VoucherViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{o != null}">
+                        <h:outputText value="#{bundle.Id}"/>
+                        <h:outputText value="#{o.id}" title="#{bundle.Id}"/>
+                        <h:outputText value="#{bundle.Type}"/>
+                        <h:outputText value="#{o.voucherType.name}" />
+                        <h:outputText value="#{bundle.Clasificador}"/>
+                        <h:outputText value="#{o.clasificador}" title="#{bundle.Clasificador}"/>
+                        <h:outputText value="#{bundle.Documento}"/>
+                        <h:outputText value="#{o.documento}" title="#{bundle.Documento}"/>
+                        <h:outputText value="#{bundle.Fecha}"/>
+                        <h:outputText value="#{o.fecha}" title="#{bundle.Fecha}"/>
+                        <h:outputText value="#{bundle.Detail}"/>
+                        <h:outputText value="#{o.detail}" title="#{bundle.Detail}"/>
+                        <h:outputText value="#{bundle.Amount}"/>
+                        <h:outputText value="#{o.amount}" title="#{bundle.Amount}"/>
+                        <h:outputText value="#{bundle.Created}"/>
+                        <h:outputText value="#{o.created}" title="#{bundle.Created}"/>
+                        <h:outputText value="#{bundle.UserId}"/>
+                        <h:outputText value="#{o.userId}" title="#{bundle.UserId}"/>
+                    </p:panelGrid>
+                    <center>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{tblExpedienteController.selected}" var="o"/>
+        <p:dialog id="TblExpedienteView" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.View} #{bundle.Expediente}">
+            <h:form id="TblExpedienteViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-form-layout" rendered="#{o != null}">
+                        <h:outputLabel value="#{bundle.Anio}:"/>
+                        <h:outputText value="#{o.tblExpedientePK.anio}" title="#{bundle.Año}"/>
+                        <h:outputLabel value="#{bundle.SIAF}:"/>
+                        <h:outputText value="#{o.tblExpedientePK.numsiaf}" title="#{bundle.Id}"/>
+                        <h:outputLabel value="#{bundle.Type} #{bundle.Archivo} :"/>
+                        <h:outputText value="#{o.fileType.name}" title="#{bundle.filaestante}"/>
+                        <h:outputLabel value="#{bundle.Type} #{bundle.Operacion} :"/>
+                        <h:outputText value="#{o.operationType.name}" title="#{bundle.filaestante}"/>
+
+                        <h:outputLabel value="#{bundle.Numero} #{bundle.Meta}:"/>
+                        <h:outputText value="#{o.metaCode}" title="#{bundle.Meta}"/>
+                        <h:outputLabel value="#{bundle.Description}:"/>
+                        <h:outputText value="#{o.descripci}" title="#{bundle.Descripci}"/>
+                        <h:outputLabel value="#{bundle.NumCompro}:"/>
+                        <h:outputText value="#{o.numCompro}" title="#{bundle.NumCompro}"/>
+                        <h:outputLabel value="#{bundle.Ruc}"/>
+                        <h:outputText value="#{o.ruc}" title="#{bundle.Ruc}"/>
+                        <h:outputLabel value="#{bundle.RazonSocial}:"/>
+                        <h:outputText value="#{o.razonSocial}" title="#{bundle.RazonSocial}"/>
+                        <h:outputLabel value="#{bundle.NumSISGEDO}:"/>
+                        <h:outputText value="#{o.numSISGEDO}" title="#{bundle.NumSISGEDO}"/>
+                        <h:outputLabel value="#{bundle.Estado}:"/>
+                        <h:outputText value="#{o.estado}" title="#{bundle.Estado}"/>
+                        <h:outputLabel value="#{bundle.Numfolio}:"/>
+                        <h:outputText value="#{o.numfolio}" title="#{bundle.Numfolio}"/>
+                        <h:outputLabel value="#{bundle.Importe}:"/>
+                        <h:outputText value="#{o.importe}" title="#{bundle.Importe}"/>
+                        <h:outputLabel value="#{bundle.Local}:"/>
+                        <h:outputText value="#{o.incomeType.name}" title="#{bundle.filaestante}"/>
+                        <h:outputLabel value="#{bundle.Estante}:"/>
+                        <h:outputText value="#{o.estante}" title="#{bundle.estante}"/>
+                        <h:outputLabel value="#{bundle.Fila} #{bundle.Estante}:"/>
+                        <h:outputText value="#{o.filaestante}" title="#{bundle.filaestante}"/>
+                        <h:outputLabel value="#{bundle.Archivador}:"/>
+                        <h:outputText value="#{o.archivador}" title="#{bundle.archivador}"/>
+                        <h:outputLabel value="#{bundle.Observacion}:"/>
+                        <h:outputText value="#{o.observacion}" title="#{bundle.archivador}"/>
+
+                        <div style="word-wrap: break-word ; padding: 10px 0px">
+                            <a href="/fs/tesoreria/expediente/#{o.tblExpedientePK.anio}-#{o.tblExpedientePK.numsiaf}.pdf" target="_new">Ver Expediente</a>
+                        </div>
+
+                    </p:panelGrid>
+                    <center>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

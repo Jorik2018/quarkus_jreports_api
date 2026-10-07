@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt//www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="htt//www.w3.org/1999/xhtml"
+      xmlns:ui="htt//xmlns.jcp.org/jsf/html"
+      xmlns:v-on="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:v-slot="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:v-bind="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="htt//xmlns.jcp.org/jsp/jstl/core">
+
+    <v-form header="#{NODE_TITLE}" action="/admin/tupa/api/pago">
+        <v-table ref="table" vbindsrc="'/admin/siaf/api/6/'+o.year+'/'+o.month" v-bind:value="o.data" scrollable="true"
+                 autoload="false" storage="siaf-analisis-metas"
+                 v-on:loaded="storage"
+                 summary="1"
+                 >
+            <template v-slot:header="">
+                <label>Año: </label>
+                <input v-model="o.year" type="number" class="center" style="width: 60px"/>
+                <label>Mes: </label>
+                <v-select v-model="o.month" style="width: 120px;display: inline-block">
+                    <option>TODOS</option>
+                    <option v-for="(m,i) in month" v-bind:value="i+1">{{m}}</option>
+                </v-select>
+                <v-button icon="fa-sync" v-on:click="refresh"/>
+                <v-button icon="fa-download" v-on:click="download"/>
+            </template>
+            <template v-slot:default="{row,index}">
+                <td header="RUC" width="80" sort="ruc" class="center">
+                    {{row.ruc}}
+                </td>                
+                <td header="Proveedor" sort="personaNombre" width="220">
+                    {{row.personaNombre}}
+                </td>
+                <td header="Expedientes" sort="count" width="100" class="right">
+                    {{row.count}}
+                </td>
+                <td header="Comprometido" width="100" sort="C" class="right">
+                    {{row.C|number}}
+                </td>
+                <td header="Devengado" width="100" sort="D" class="right">
+                    {{row.D|number}}
+                </td>
+                <td header="Girado" width="100" sort="G" class="right">
+                    {{row.G|number}}
+                </td>
+                <td header="Pagado" width="100" sort="P" class="right">
+                    {{row.P|number}}
+                </td>
+                
+            </template>
+            <template v-slot:summary="{data}">
+                <td width="100" class="center">
+                    TOTAL
+                </td>                
+                <td width="220">
+                    {{data.length}} Proveedores
+                </td>
+                <td width="100" class="right">
+                   
+                </td>
+                <td width="100" class="right">
+                    {{data.sum('C')|number}}
+                </td>
+                <td width="100" class="right">
+                    {{data.sum('D')|number}}
+                </td>
+                <td width="100" class="right">
+                    {{data.sum('G')|number}}
+                </td>
+                <td width="100" class="right">
+                    {{data.sum('P')|number}}
+                </td>
+            </template>
+        </v-table>
+        <div class="v-form">
+            <label>Año:</label>
+            <input type="number" v-model="o.year"/>
+            <label>Mes:</label>
+            <v-select v-model="o.month">
+                <option>Seleccionar opcion</option>
+                <option v-for="(m,i) in month" v-bind:value="i+1">{{m}}</option>
+            </v-select>
+        </div>
+        <center>
+            <v-button icon="fa-download" v-on:click.prevent="download" value="#{bundle.Download}"/>
+            <v-button icon="fa-ban" v-on:click.prevent="close" value="#{bundle.Cancel}"/>
+        </center>
+        
+    </v-form>
+    <script>
+        _.ui({
+            data: {
+                o: {
+                    data:[],
+                    recoveryDate:null,
+                    year: new Date().getFullYear(), 
+                    month: new Date().getMonth()+1
+                }, 
+                month: ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']
+            },
+            created(){
+                var me=this,o=JSON.parse(localStorage.getItem('siaf-proveedor'));
+                if(o&amp;&amp;Array.isArray(o.data)){
+                    me.o=o;
+                }else{
+                    localStorage.setItem('siaf-proveedor',null);
+                }
+            },
+            methods: {
+                refresh(){
+                    var me = this;
+                    var o = JSON.clone(me.o);
+                    axios.post(
+                        'http://localhost:7040'+
+                        '/api/6/' + o.year + '/' + 0,{a:1,select:'ruc,proveedor',ruc:1344141}).then((r) => {
+                        o.data=r.data;
+                        o.recoveryDate=new Date().getTime();
+                        localStorage.setItem('siaf-proveedor',JSON.stringify(o));
+                        me.o=o;
+                        me.$refs.table.kc++;
+                    });
+                },
+                storage(e){
+                    var t=e.target;
+                    localStorage.setItem(t.storage,JSON.stringify(t.data));
+                },
+                download(e) {
+                    var me = this;
+                    var o = JSON.clone(me.o);
+                    if(Array.isArray(o.data)){
+                        me.saveAs('/admin/jasper/api/download',o,'report.pdf');
+                    }else
+                        axios.post('/api/6/' + o.year + '/' + o.month).then((r) => {
+                            o.data=r.data;
+                            me.saveAs('/admin/jasper/api/download',o,'report.pdf');
+                        });
+                }
+            }
+        });
+    </script>
+</html>

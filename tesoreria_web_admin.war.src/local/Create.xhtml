@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{tblTipoingresoController.selected}" var="o"/>
+        <p:dialog id="TblTipoingresoCreate" header="#{(empty o.id?bundle.Create:bundle.Edit)} #{bundle.Local}">
+            <h:form id="TblTipoingresoCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="1" rendered="#{o != null}">
+                        <p:outputLabel value="#{bundle.Name}:" for="descripcion" />
+                        <p:inputText required="true" id="descripcion" value="#{o.name}" title="#{bundle.name}" />
+                        <p:outputLabel value="#{bundle.Description} :" for="desc1" />
+                        <p:inputText required="true" id="desc1" value="#{o.name1}" title="#{bundle.name1}" />
+                       
+                        
+                    </p:panelGrid>
+                    <center>
+                        <p:commandButton icon="ui-icon-disk" actionListener="#{tblTipoingresoController.create}" value="#{bundle.Save}" update="display,:growl" oncomplete="return _.c(this,args)"/>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

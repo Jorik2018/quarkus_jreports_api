@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{voucherController.selected}" var="o"/>
+        <c:set value="#{o.request}" var="r"/>
+        <p:dialog id="VoucherCreate" header="#{(empty o.id?bundle.Create:bundle.Edit)} #{bundle.Voucher}">
+            <h:form id="VoucherCreateForm">
+                <h:panelGroup id="display">
+                    <style>
+                        .ui-panelgrid-cell{
+                            width: 100% !important;
+                        }
+                    </style>
+
+                    <p:panelGrid columns="1" rendered="#{o != null}">
+                        <p:fieldset legend="Información de Solicitud" rendered="#{empty viewParam.p['minimal']}">
+                            <p:panelGrid columns="1" layout="grid" class="ui-form-layout">
+                                <p:outputLabel value="#{bundle.Dependency}:" for="dependency" />
+                                <p:selectOneMenu id="dependency" class="required" converter="dependencyControllerConverter"  
+                                                 filter="true"  filterMatchMode="contains"
+                                                 value="#{r.dependency}">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                                    <f:selectItems value="#{dependencyController.getItems(viewParam.set('dependency',_USER.ext['dependency']).p)}"
+                                                   var="i" itemValue="#{i}" itemLabel="#{i}" />
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{bundle.Position}:" for="position" />
+                                <p:selectOneMenu id="position" 
+                                                 filter="true"  filterMatchMode="contains"
+                                                 value="#{r.position}">
+                                    <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                                    <f:selectItems value="#{positionController.getItems(viewParam.p)}"
+                                                   var="i" itemValue="#{i}" itemLabel="#{i.name}" />
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{bundle.Employee}:" for="people" />
+                                <p:outputPanel style="text-align: right">
+                                    <c:if test="#{systemController.access('ADMIN_TESORERIA_REQUEST')}">
+                                        <ui:include src="/widget/personaNaturalAutocomplete.xhtml">
+                                            <ui:param value="${r.people}" name="VALUE" />
+                                            <ui:param value="people" name="ID" />
+                                        </ui:include>
+                                    </c:if>
+                                    <p:commandButton style="margin-top: 5px" icon="ui-icon-search" value="Buscar Empleado" 
+                                                     actionListener="#{viewParam.set('UPDATE','VoucherCreateForm').set('CLIENT',voucherController).include('/rh/contract/Busqueda.xhtml')}"  oncomplete="_.o('ContractBusquedaDlg')"
+                                                     immediate="true"  />
+                                </p:outputPanel>
+                            </p:panelGrid>
+                        </p:fieldset>
+                        <p:outputLabel value="#{bundle.Clasificador}" for="clasificador" />
+                        <p:outputPanel id="clasificadorPanel">
+                            <p:inputTextarea readonly="true" style="margin-bottom: 3px; " rendered="#{not empty viewParam.p['clasificador']}" rows="2" required="true" styleClass="center" 
+                                             id="clasificador" class="clasificador" value="#{o.clasificador} #{viewParam.p['clasificador'].description} #{viewParam.p['clasificador'].descriptionLong}" title="#{bundle.Clasificador}" />
+                            <p:commandButton icon="ui-icon-search" style="width: 100%"
+                                             actionListener="#{viewParam.set('CLIENT',voucherController).include('/siaf/clasificador/Busqueda.xhtml').update('ClasificadorBusquedaDlg').set('UPDATE','VoucherCreateForm:clasificadorPanel')}"  value="#{bundle.Search}" update=":growl" immediate="true" process="@form" oncomplete="_.o('ClasificadorBusquedaDlg')"/>
+
+                        </p:outputPanel>
+                        <p:outputLabel value="#{bundle.Type}" for="clase" />
+                        <p:selectOneMenu id="clase" required="true" styleClass="required" 
+                                         value="#{o.voucherType}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{voucherController.getVoucherTypeList()}"
+                                           var="i" itemValue="#{i}" itemLabel="#{i.name}" />
+
+                        </p:selectOneMenu>
+                        <p:fieldset legend="#{bundle.Provider}">
+                            <p:panelGrid columns="1">
+                                <p:outputLabel value="#{bundle.Ruc}" for="ruc" />
+                                <p:inputText id="ruc" styleClass="center x-ruc" maxlength="11" 
+                                             immediate="true" value="#{o.ext['ruc']}" 
+                                             title="#{bundle.Documento}" />
+                                <p:outputPanel class="right">
+                                    <p:commandButton icon="ui-icon-refresh" id="tt" 
+                                                     class="search-ruc"
+                                                     actionListener="#{viewParam.x(o.ext.put('businessName',voucherController.getBusinessNameByCode(o.ext['ruc'])))}" 
+                                                     immediate="true" process="tt VoucherCreateForm:ruc"
+                                                     update="@parent:@parent"  />
+                                </p:outputPanel>
+                                <p:outputLabel value="#{bundle.Nombre}" for="name" />
+                                <p:inputTextarea id="name" styleClass="x-ruc-razon-social" value="#{o.ext['businessName']}" title="#{bundle.Documento}" />
+                                <script>
+                                    $(function () {
+                                        $('.x-ruc').change(function(e){
+                                            $('.search-ruc').click();
+                                        }).keydown(function(e){
+                                            if (e.keyCode === 13) {
+                                                $('.x-ruc').change();
+                                                e.preventDefault();
+                                                return false;
+                                            }
+                                        })
+                                        _.sunat={ok:function(d){
+                                            $('.x-ruc-razon-social').val(d.razonSocial);
+                                        }}
+                                        _.loadScript('/resources/js/sunat.js', function () {});
+                                    });
+                                </script>
+                            </p:panelGrid>
+                            
+                            
+                        </p:fieldset>
+                        <p:outputLabel value="#{bundle.Documento}" for="documento" />
+                        <p:inputText required="true" id="documento" styleClass="center" value="#{o.documento}" title="#{bundle.Documento}" />
+                        <p:outputLabel value="#{bundle.Fecha}" for="fecha" />
+                        <p:calendar required="true" id="fecha" pattern="dd/MM/yyyy" value="#{o.fecha}" showOn="button"/>
+                        <p:outputLabel value="#{bundle.Amount}" for="amount" />
+                        <p:inputNumber inputStyleClass="required" id="amount" value="#{o.amount}" required="true" decimalSeparator="." thousandSeparator="," title="#{bundle.total}" />
+                        <p:outputLabel value="#{bundle.Detail}" for="detail" />
+                        <p:inputTextarea required="true" id="detail" value="#{o.detail}" title="#{bundle.Detail}" />
+                    </p:panelGrid>
+                    <h:inputText styleClass="x-update hide"   value="#{viewParam.p['UPDATE']}"/>
+                    <center>
+                        <p:commandButton icon="ui-icon-disk" actionListener="#{voucherController.create}" value="#{bundle.Save}" update="display,:growl" oncomplete="return _.c(this,args)"/>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

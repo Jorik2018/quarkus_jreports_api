@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:v-on="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:v-bind="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <v-form header="#{(empty o.id?bundle.Create:bundle.Edit)} #{'Carta Fianza'}" 
+            action="/admin/tesoreria/api/warrant">
+        <div class="v-form">
+            <label>#{bundle.Proveedor}:</label>
+            <v-textarea required="true" rows="1" class="ucase" v-model="o.proveedor" title="#{bundle.proveedor}" />
+            <label>#{bundle.Expediente}:</label>
+            <template>
+                <input required="true" id="expediente" class="center" v-model="o.expediente" title="#{bundle.expediente}" />
+                <template rendered="#{empty o.id}">
+                    <div class="right" style="margin-top: 8px">
+                        <v-button value="Nuevo expediente" icon="fa-file" v-on:click="nuevoExpediente(0)" />
+                    </div>
+                </template>
+            </template>
+            <label>#{bundle.Entidad}:</label>
+            <input required="true" id="entidad"  class="ucase" v-model="o.entidad" title="#{bundle.entidad}" />
+            <label>#{bundle.Obra}:</label>
+            <v-textarea required="true" v-model="o.obra" title="#{bundle.obra}" />
+            <label>#{bundle.ProcessType}:</label>
+            <v-textarea maxlength="60" rows="1" v-model="o.processType"/>
+            <label>#{bundle.Tipo}:</label>
+            <v-select id="tipoGarantia" 
+                      v-model="o.warrantTypeId"
+                      required="true">
+                <option value="">#{bundle.SelectOneMessage}</option>
+                <v-options url="/admin/tesoreria/api/warrant-type/0/0" value-field="id" display-field="name"/>
+            </v-select>
+            <label>#{bundle.Total}:</label>
+            <input id="total" v-model="o.total" required="true" decimalSeparator="." thousandSeparator="," title="#{bundle.total}" />
+            <label>#{bundle.Fecha} #{bundle.Renovacion}:</label>
+            <v-calendar id="fechaRenovacion" pattern="dd/MM/yyyy" v-model="o.fechaRenovacion" showOn="button"/>
+            <label>#{bundle.Nro} #{bundle.Carta}:</label>
+            <input id="nroCarta" v-model="o.nroCarta" />
+            <label>#{bundle.Fecha} #{bundle.Emision}:</label>
+            <v-calendar id="fechaEmision" pattern="dd/MM/yyyy" v-model="o.fechaEmision" showOn="button"/>
+            <label>#{bundle.Fecha} #{bundle.Vencimiento}:</label>
+            <v-calendar required="true" pattern="dd/MM/yyyy" v-model="o.fechaVencimiento" showOn="button"/>
+            <label>#{bundle.Fecha} #{bundle.Registro}:</label>
+            <v-calendar id="fechaRegistro" pattern="dd/MM/yyyy" v-model="o.fechaRegistro" showOn="button"/>
+            <label>#{bundle.Observacion}:</label>
+            <v-textarea id="observacion" v-model="o.observacion" title="#{bundle.observacion}" />
+            <label>#{bundle.Confirmacion} #{bundle.Banco}:</label>
+            <input id="confirmacionBanco" v-model="o.confirmacionBanco" title="#{bundle.confirmacionBanco}" />
+            <label>#{bundle.Renovated}:</label>
+            <v-switch id="renovado" v-model="o.renovated"/>
+            <div class="center uploader" style="margin-bottom: 20px">
+                <div v-if="o.ext.tempFile" style="padding: 10px 0px">
+                    <a v-bind:href="'/fs/temp/'+o.ext.tempFile" 
+                       target="_cartaFianza" >Ver Documento</a>
+                </div>
+                <template v-if="o.upload">
+                    <div style="padding: 10px 0px">
+                        <a v-if="!o.ext.tempFile" v-bind:href="'/fs/tesoreria/cartaFianza/'+o.ext.src" 
+                           target="_cartaFianza" >Ver Documento</a>
+                    </div>
+                    <div style="margin-bottom: 8px">
+                        <v-checkbox v-model="o.ext.deleteUpload" label="Eliminar archivo adjunto"
+                                    v-on:input="deleteInput"/>
+                    </div>
+                </template>
+                <template v-if="o.cartaFianzaUpload">
+                    <div style="word-wrap: break-word ; padding: 10px 0px">
+                        {{o.cartaFianzaUpload.filename}}
+                    </div>
+                </template>
+                <v-uploader v-on:input="uploaderInput"/>
+            </div>
+
+        </div>
+        <center>
+            <v-button value="#{bundle.Save}" icon="fa-save" v-on:click.prevent="save"/>
+            <v-button value="#{bundle.Cancel}" icon="fa-ban" v-on:click.prevent="close"/>
+        </center>
+
+    </v-form>
+    <script>
+        _.ui({
+            porps: ['id','parent'],
+            data: function () {
+                return {deleteUpload: null, tempFile: null, o: {ext:{}}}
+            },
+            created() {
+                var me = this, id = me.id,parent=me.parent;
+                if (id) {
+                    axios.get('/admin/tesoreria/api/warrant/' + id).then(function (response) {
+                        var o = response.data;
+                        o.ext.tempFile = null;
+                        me.o = o;
+                    });
+                }else{
+                    me.nuevoExpediente(me.parent);
+                }
+            },
+            methods: {
+                nuevoExpediente(parent) {
+                    var me = this;
+                    axios.get('/admin/tesoreria/api/warrant/create/' + (parent?parent:0)).then(function (response) {
+                        var o = response.data;
+                        o.ext.src = null;
+                        o.ext.tempFile = null;
+                        me.o = o;
+                    });
+                },
+                uploaderInput(o) {
+                    this.o.ext.tempFile=o.tempFile;
+                },
+                process(o){
+                    console.log(o);
+                }
+            }
+        })
+    </script>
+</ui:composition>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt//www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+      xmlns:ui="htt//xmlns.jcp.org/jsf/html"
+      xmlns:v-on="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:v-slot="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:v-bind="htt//xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="htt//xmlns.jcp.org/jsp/jstl/core">
+    <v-form id="WarrantList" header="#{NODE_TITLE}" action="/admin/tesoreria/warrant">
+        <v-table ref="WarrantList" 
+                 v-bind:pagination="50"
+                 v-on:updated="tableUpdated"
+                 src="/admin/tesoreria/api/warrant"
+                 rowKey="id"
+                 scrollable="true"
+                 rowStyleClass2="row.ext gt 5?'ooo':(row.ext gt 1?'yellow':row.ext gt 0?'':'')}"
+                 >
+            <template v-slot:header="">
+                <v-button id="createButton" v-if="can('ADMIN_TESORERIA_WARRANT')" icon="fa-plus" class="on" value="#{bundle.Create}" v-on:click.prevent="create"/>
+                <v-button id="viewButton" icon="fa-search" value="#{bundle.View}" />
+                <v-button id="editButton" v-if="can('ADMIN_TESORERIA_WARRANT')" icon="fa-pen" value="#{bundle.Edit}" v-on:click.prevent="edit" v-bind:disabled="!rowSelectedCount"/>
+                <v-uploader v-if="can('ADMIN_TESORERIA_WARRANT')" v-on:input="upload" v-bind:disabled="!rowSelectedCount"/>
+                <v-button id="deleteButton" v-if="can('ADMIN_TESORERIA_WARRANT')" icon="fa-trash"  value="#{bundle.Delete}" v-on:click.prevent="destroy" v-bind:disabled="!rowSelectedCount"/>
+                <v-button id="exportButton" icon="fa-download" class="on" value="#{bundle.Export}" v-on:click.prevent="open('/admin/tesoreria/report/warrant')"/>
+                <v-button title="#{bundle.Refresh}" icon="fa-sync" v-on:click.prevent="refresh"/>
+            </template>
+            <template v-slot:default="{row,index}">
+                <td class="center" header="#" width="28" >
+                    {{pad(index+1,3)}}
+                </td>
+                <td width="50" class="center" header="#{bundle.Adjunto}">
+                    <a v-if="row.upload" v-bind:href="'/fs/tesoreria/cartaFianza/'+row.ext.src" target="_cartaFianza" >
+                        {{row.upload?'SI':''}}
+                    </a>
+                </td>
+                <td width="200" header="#{bundle.Proveedor}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.provider" />
+                    </v-filter>
+                    <template v-if="row.provider">
+                        <a href="/admin/directorio/{row.provider.id}" target="_blank">
+                            {{row.proveedor}}
+                        </a>
+                    </template>
+                    <template v-if="!row.provider">
+                        {{row.proveedor}}
+                    </template>
+                </td>
+                <td width="80" class="center" header="#{bundle.Expediente}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.expediente" />
+                    </v-filter>
+                    <div class="key">
+                        {{pad(row.expediente,4)}}
+                    </div>
+                    <div class="hidden">{{row.obra}}</div>
+                </td>
+                <td width="200" header="#{bundle.ProcessType}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.processType" />
+                    </v-filter>
+                    {{row.processType}}
+                </td>
+                <td width="320" class="value" header="#{bundle.Obra}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.obra" />
+                    </v-filter>
+                    {{row.obra}}
+                </td>
+                <td width="130" header="#{bundle.Entidad}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.entidad" />
+                    </v-filter>
+                    {{row.entidad}}
+                </td>
+                <td width="100" class="center" header="#{bundle.Tipo} #{bundle.Garantia}">
+                    <v-filter name="filter">
+                        <v-select label="&nbsp;" multiple="true" style="width: 100%" v-model="filters.warrantType">
+                            <v-options url="/admin/tesoreria/api/warrant-type/0/0" value-field="id" display-field="name"/>
+                        </v-select>
+                    </v-filter>
+                    {{row.warrantType.name}}
+                </td>
+                <td width="80" class="right" header="#{bundle.Total}" v-bind:title="row.total">
+                    <v-filter name="filter" >
+                        <v-filter-number v-model="filters.total"/>
+                    </v-filter>
+                    {{format(row.total)}}
+                </td>
+                <td width="80"  class="center" header="#{bundle.Fecha} #{bundle.Renovacion}">
+                    <v-filter name="filter">
+                        <v-filter-calendar v-model="filters.fechaRenovacion"/>
+                    </v-filter>
+                    {{row.fechaRenovacion|date}}
+                </td>
+                <td width="120" class="center" header="#{bundle.Numero} #{bundle.Carta}">
+                    <v-filter name="filter" >
+                        <input v-model="filters.code" />
+                    </v-filter>
+                    {{row.nroCarta}}
+                </td>
+                <td width="80" class="center" header="#{bundle.Fecha} #{bundle.Emision}">
+                    <v-filter name="filter" >
+                        <v-filter-calendar v-model="filters.fechaEmision"/>
+                    </v-filter>
+                    {{row.fechaEmision|date}}
+                </td>
+                <td width="80" header="#{bundle.Fecha} #{bundle.Vencimiento}" 
+                    class="center cf-cyan">
+                    <v-filter name="filter">
+                        <v-filter-calendar v-model="filters.fechaVencimiento"/>
+                    </v-filter>
+                    {{row.fechaVencimiento|date}}
+                </td>
+                <td class="center" v-bind:class="row.renovated?'green':(row.diff>5?'':(row.diff>0?'yellow':'red'))" width="90" header="Dias Vencimiento">
+                    <v-filter name="filter" >
+                        <v-select v-model="filters.faltan">
+                            <option value="0">TODOS</option>
+                            <option value="5" label="POR VENCER"/>
+                            <option value="-1" label="VENCIDOS"/>
+                            <option value="-2" label="RENOVADOS"/>
+                        </v-select>
+                    </v-filter>{{6>row.diff||row.renovated?'':row.diff}}
+                        {{row.renovated?'RENOVADO':(row.diff>5?'':(row.diff>0?('POR VENCER EN '+row.diff+' DIAS'):('VENCIDO HACE '+(-row.diff)+' DIAS')))}}
+                </td>
+                <td width="80" class="center" header="#{bundle.Fecha} #{bundle.Registro}">
+                    <v-filter name="filter" >
+                        <v-filter-calendar v-model="filters.fechaRegistro"/>
+                    </v-filter>
+                    {{row.fechaRegistro|date}}
+                </td>
+                <td width="160" header="#{bundle.Observacion}">
+                    <v-filter name="filter" >
+                        <input disabled="disabled" v-model="filters.observacion" />
+                    </v-filter>
+                    {{row.observacion}}
+                </td>
+                <td width="100" class="center" header="#{bundle.Confirmacion} #{bundle.Banco}">
+                    <v-filter name="filter" >
+                        <input disabled="disabled" v-model="filters.confirmacionBanco" />
+                    </v-filter>
+                    <template value="{not empty row.confirmacionBanco and row.confirmacionBanco ne '0'?'SI':''}"/>
+                </td>
+            </template>
+        </v-table>
+    </v-form>
+    <script>
+        _.ui({
+            data() {
+                return {};
+            },
+            created() {
+                this.filters.order = 'e';
+            },
+            methods: {
+                format(n){
+                    if(n){
+                        var ni=Math.trunc(n),dec=(Math.round(((n-ni) + Number.EPSILON) * 100));
+                        return (ni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))+'.'+this.pad(dec,2);
+                    }
+                },
+                create() {
+                    var me = this, t = me.$refs.WarrantList;
+                    if (t.selected.length) {
+                        me.open('/admin/tesoreria/warrant/create/' + t.data[t.selected[0]].id);
+                    } else
+                        me.open('/admin/tesoreria/warrant/create');
+                },
+                upload(o){
+                    var me = this, t = me.$refs.WarrantList;
+                    o.id=t.data[t.selected[0]].id;
+                    axios.post('/admin/tesoreria/api/warrant/save-file',o).then(() => {
+                        me.refresh();
+                    });
+                },
+                tableUpdated(e) {
+                    var body = e.$el.querySelectorAll('.v-datatable-data tr');
+                    var header = e.$el.querySelectorAll('.v-cloned-header th'), k = false;
+                    for (var i = 0; body.length > i; i++) {
+                        var c = body[i], h = c.querySelector('.key');
+                        if (h) {
+                            h = h.innerHTML;
+                            if (h !== k) {
+                                k = h;
+                                var td = document.createElement('td');
+                                td.setAttribute("colspan", header.length);
+                                td.className = 'group';
+                                var tr = document.createElement('tr');
+                                tr.appendChild(td);
+                                td.innerHTML = c.querySelector('.value').innerHTML;
+                                c.parentNode.insertBefore(tr, c);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <style>
+        .cf-cyan{
+            background-color:#a9fff7;
+        }
+        .ui-state-hover .cf-cyan{
+            background-color:#8bdcd5;
+        }
+        tr.v-selected .cf-cyan{
+            background-color:#274a47;
+        }
+        .ui-state-highlight .cf-white{
+            color:#ffffff !important;
+        }
+    </style>
+</ui:composition>

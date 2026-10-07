@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rendicionCajaChicaSummary" pageWidth="310" pageHeight="802" columnWidth="310" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cbf621cb-b0d4-4e10-87b8-36d337675d5f">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="324"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+			<topPen lineWidth="0.25"/>
+			<leftPen lineWidth="0.25"/>
+			<bottomPen lineWidth="0.25"/>
+			<rightPen lineWidth="0.25"/>
+		</box>
+	</style>
+	<field name="especifica" class="java.lang.Object">
+		<fieldDescription><![CDATA[[0]]]></fieldDescription>
+	</field>
+	<field name="importe" class="java.lang.Number">
+		<fieldDescription><![CDATA[[1]]]></fieldDescription>
+	</field>
+	<variable name="importe_1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="18" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement style="style1" x="0" y="0" width="160" height="18" uuid="2844c331-d7ff-4f02-acc9-1932daae22ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESPECIFICA DE GASTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="style1" x="160" y="0" width="145" height="18" uuid="01564607-0c7a-4000-8d51-e35330332c30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE S/.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement style="style1" x="0" y="0" width="160" height="18" uuid="69dfa248-5918-4270-9c56-189ae4c0daff"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{especifica}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="style1" x="160" y="0" width="145" height="18" uuid="e808487c-80f5-46ed-9441-d6cdc2a4a77c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement style="style1" x="160" y="0" width="145" height="18" uuid="f17e249b-9f52-4f92-b1a2-97ff32e51f50"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{importe_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="style1" x="0" y="0" width="160" height="18" uuid="5ccfbf6f-07d2-4b47-b7af-e633dcbb7bc4"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL S/.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

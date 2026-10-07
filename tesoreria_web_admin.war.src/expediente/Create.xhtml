@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{tblExpedienteController.selected}" var="o"/>
+        <p:dialog id="TblExpedienteCreate" header="#{(empty o.tblExpedientePK?bundle.Create:bundle.Edit)} #{bundle.Expediente}">
+            <h:form id="TblExpedienteCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="1" rendered="#{o != null}">
+                        <p:outputLabel value="#{bundle.Año}:" for="año" />
+                        <p:inputNumber  decimalPlaces="0" required="true" id="año" thousandSeparator=""    maxValue="2020"  minValue="0" value="#{o.ext['anio']}" title="#{bundle.Año}" />
+                        <p:outputLabel value="#{bundle.SIAF}:" for="id" />
+                        <p:inputText class="center" required="true" id="id" value="#{o.ext['siaf']}" title="#{bundle.Id}" />
+                        <p:outputLabel value="#{bundle.Correlative}:" for="correlative" />
+                        <p:inputText class="center" required="true" id="correlative" value="#{o.ext['correlative']}" title="#{bundle.Correlative}" />
+                        
+                        <p:outputLabel value="#{bundle.Type} #{bundle.File}:" for="typeFile" />
+                        <p:selectOneMenu id="typeFile"  required="true" class="required"
+                                         value="#{o.fileType}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{tblTipoarchivoController.getItems(viewParam.p)}"
+                                           var="t" itemValue="#{t}"  itemLabel="#{t.name}" />
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel value="#{bundle.Type} #{bundle.Operation}:" for="operationType" />
+                        <p:selectOneMenu id="operationType" required="true"  class="required"
+                                         value="#{o.operationType}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{tblToperacionController.getItems(viewParam.p)}"
+                                           var="t" itemValue="#{t}"  itemLabel="#{t.name}" />
+                        </p:selectOneMenu> 
+
+                        <p:outputLabel value="#{bundle.Description}:" for="descripci" />
+                        <p:inputTextarea required="true" id="descripci" value="#{o.descripci}" title="#{bundle.Descripci}" />
+                        <p:outputLabel value="#{bundle.Voucher}:" for="numCompro" />
+                        <p:inputText required="true" id="numCompro" value="#{o.numCompro}" title="#{bundle.NumCompro}" />
+                        <!--p:outputLabel value="#{bundle.Expediente}:" for="numExpedien" />
+                        <p:inputText id="numExpedien" value="#{o.numExpedien}" title="#{bundle.NumExpedien}" /-->
+                        <p:outputLabel value="#{bundle.Ruc}:" for="ruc" />
+                        <p:inputText  id="ruc" value="#{o.ruc}" title="#{bundle.Ruc}" />
+                        <p:outputLabel value="#{bundle.RazonSocial}:" for="razonSocial" />
+                        <p:inputText  id="razonSocial" value="#{o.razonSocial}" title="#{bundle.RazonSocial}" />
+                        <p:outputLabel value="#{bundle.NumSISGEDO}:" for="numSISGEDO" />
+                        <p:inputText required="true" id="numSISGEDO" value="#{o.numSISGEDO}" title="#{bundle.NumSISGEDO}" />
+                        <p:outputLabel value="#{bundle.Status}:" for="estado" />
+                        <p:inputText required="true" id="estado" value="#{o.estado}" title="#{bundle.Estado}" />
+                        <p:outputLabel value="#{bundle.Numfolio}:" for="numfolio" />
+                        <p:inputText required="true" id="numfolio" value="#{o.numfolio}" title="#{bundle.Numfolio}" />
+                        <p:outputLabel value="#{bundle.Importe}:" for="importe" />
+                        <p:inputNumber required="true" id="importe" value="#{o.importe}" decimalSeparator="." thousandSeparator=","  title="#{bundle.Importe}" />
+                        <p:outputLabel value="#{bundle.Codigo} #{bundle.Proyecto}:" for="observaciones" />
+                        <p:inputText required="true" id="observaciones" value="#{o.observaciones}" title="#{bundle.Observaciones}" />
+
+                        <p:outputLabel value="#{bundle.Meta}:" for="tipoAcces" />
+                        <p:inputText required="true" id="tipoAcces" value="#{o.metaCode}"  />
+                        <p:outputLabel value="#{bundle.Componente}:" for="componente" />
+                        <p:inputText id="componente" value="#{o.componenteCode}" />
+
+                        <p:outputLabel value="#{bundle.Local}:" for="incomeType" />
+                        <p:selectOneMenu id="incomeType" required="true"  class="required"
+                                         value="#{o.incomeType}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{tblTipoingresoController.getItems(viewParam.p)}"
+                                           var="t" itemValue="#{t}"  itemLabel="#{t.name}" />
+                        </p:selectOneMenu> 
+                        <p:outputLabel value="#{bundle.Estante}:" for="estante" />
+                        <p:inputText  id="estante" required="true"  value="#{o.estante}" title="#{bundle.estante}" />
+
+                        <p:outputLabel value="#{bundle.Fila} #{bundle.Estante}:" for="filaestante" />
+                        <p:inputText  id="filaestante" required="true" value="#{o.filaestante}" title="#{bundle.filaestante}" />
+                        <p:outputLabel value="#{bundle.Archivador}:" for="archivador" />
+                        <p:inputText  id="archivador" required="true" value="#{o.archivador}" title="#{bundle.archivador}" />
+                        <p:outputLabel value="#{bundle.Observacion}:" for="observacion" />
+                        <p:inputTextarea  id="observacion" value="#{o.observacion}" title="#{bundle.Observacion}" />
+
+
+
+                        <p:button style="width:100%" icon="ui-icon-arrowthickstop-1-n" 
+                                  value="Adjuntar expediente" 
+                                  onclick="return _.upload({c: 'tblExpedienteController', u: 'TblExpedienteCreateForm:uploadedFile'})">
+                        </p:button>
+                        <p:outputPanel id="uploadedFile">
+                            <ui:fragment rendered="#{not empty o.ext['expedienteUpload']}">
+                                <div style="word-wrap: break-word ; padding: 10px 0px">
+                                    <a href="/fs/temp/#{o.ext['expedienteUpload'].file.name}" target="_new">#{o.ext['expedienteUpload'].filename}</a>
+                                </div>
+                            </ui:fragment>
+                        </p:outputPanel>     
+
+                    </p:panelGrid>
+                    <center>
+                        <p:commandButton icon="ui-icon-disk" actionListener="#{tblExpedienteController.create}" value="#{bundle.Save}" update="display,:growl" oncomplete="return _.c(this,args)"/>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

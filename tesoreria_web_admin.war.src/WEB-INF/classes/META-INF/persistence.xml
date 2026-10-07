@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="isobit" transaction-type="JTA">
+        <jta-data-source>java:/comp/env/isobit</jta-data-source>
+        <class>org.isobit.app.jpa.MenuRouter</class>
+        <class>org.isobit.app.jpa.Block</class>
+        <class>org.isobit.app.jpa.Box</class>
+        <class>org.isobit.app.jpa.Cache</class>
+        <class>org.isobit.app.jpa.Comment</class>
+        <class>org.isobit.app.jpa.Configuracion</class>
+        <class>org.isobit.app.jpa.DruContentTypeFoto</class>
+        <class>org.isobit.app.jpa.DruFile</class>
+        <class>org.isobit.app.jpa.Visit</class>
+        <class>org.isobit.app.jpa.Menu</class>
+        <class>org.isobit.app.jpa.MenuLink</class>
+        <class>org.isobit.app.jpa.Node</class>
+        <class>org.isobit.app.jpa.NodeCommentStatistic</class>
+        <class>org.isobit.app.jpa.NodeRevision</class>
+        <class>org.isobit.app.jpa.NodeType</class>
+        <class>org.isobit.app.jpa.Parametro</class>
+        <class>org.isobit.app.jpa.Permission</class>
+        <class>org.isobit.app.jpa.Role</class>
+        <class>org.isobit.app.jpa.Sequence</class>
+        <class>org.isobit.app.jpa.Upload</class>
+        <class>org.isobit.app.jpa.UrlAlias</class>
+        <class>org.isobit.app.jpa.User</class>
+        <class>org.isobit.app.jpa.UserRole</class>
+        <class>org.isobit.app.jpa.Visit</class>
+    
+    
+        <class>org.isobit.directory.jpa.DrtDepartamento</class>
+        <class>org.isobit.directory.jpa.District</class>
+        <class>org.isobit.directory.jpa.DrtEstadoCivil</class>
+        <class>org.isobit.directory.jpa.DrtPJContacto</class>
+        <class>org.isobit.directory.jpa.DrtPersonaNaturalEstadoCivil</class>
+        <class>org.isobit.directory.jpa.DocIdentity</class>
+        <class>org.isobit.directory.jpa.DrtDirectorio</class>
+        <class>org.isobit.directory.jpa.People</class>
+        <class>org.isobit.directory.jpa.Province</class>
+        <class>org.isobit.directory.jpa.Company</class>
+        <class>org.isobit.directory.jpa.Province</class>
+        <class>org.isobit.directory.jpa.Company</class>
+        
+        
+        <class>gob.regionancash.tesoreria.jpa.WarrantType</class>
+        <class>gob.regionancash.tesoreria.jpa.Warrant</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

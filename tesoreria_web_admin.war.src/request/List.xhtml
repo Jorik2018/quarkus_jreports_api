@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/template.xhtml">
+        <ui:param name="NODE_TITLE" value="#{bundle.Requests}" />
+        <ui:define name="body">
+            <c:set value="#{systemController.access('ADMIN_TESORERIA_REQUEST') or not empty _USER.ext['dependency']}" var="ADMIN_TESORERIA_REQUEST"/>
+            <h:form id="RequestList">
+                <p:panel header="#{NODE_TITLE}">
+                    <p:dataTable id="datalist" value="#{requestController.dataModel}" var="item"
+                                 selection="#{requestController.selectedList}"
+                                 paginator="true"
+                                 rowIndexVar="riv"
+                                 rowKey="#{item.id}"
+                                 rows="50"
+                                 rowsPerPageTemplate="50,100,150,200"
+                                 scrollable="true"
+                                 lazy="true"
+                                 rowStyleClass="#{not empty item.confirmed?'gray':(not empty item.approval?'yellow':'green')}"
+                                 >
+
+                        <f:facet name="header">
+                            <p:commandButton id="createButton" rendered="#{ADMIN_TESORERIA_REQUEST}" icon="ui-icon-plus" styleClass="on" value="#{bundle.Create}" actionListener="#{viewParam.x(requestController.prepareCreate()).include('/tesoreria/request/Create.xhtml').update('RequestCreate').set('UPDATE','RequestList:datalist')}" oncomplete="_.o('RequestCreate',args)"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" actionListener="#{viewParam.include('/tesoreria/request/View.xhtml').update('RequestView')}" oncomplete="_.o('RequestView',args)" />
+                            <p:commandButton id="approveButton" icon="ui-icon-search" value="#{bundle.Approve}" 
+                                             actionListener="#{viewParam.set('selected',requestController.selectedList).set('ACTION','approve')}" update="Approve" oncomplete="_.o('Approve',args)" />
+                            <p:commandButton id="editButton" rendered="#{ADMIN_TESORERIA_REQUEST}" icon="ui-icon-pencil" value="#{bundle.Edit}" actionListener="#{viewParam.include('/tesoreria/request/Create.xhtml').update('RequestCreate').set('UPDATE','RequestList')}" oncomplete="_.o('RequestCreate',args)" />
+                            <p:commandButton id="deleteButton" rendered="#{ADMIN_TESORERIA_REQUEST}" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":Delete" oncomplete="_.o('Delete',args)" />
+                            <p:commandButton id="exportButton" class="on" icon="ui-icon-arrowthick-1-s" value="#{bundle.Report}s" actionListener="#{sessionController.pp.put('option',1)}" update=":Export" oncomplete="_.o('Export',args)" />
+                        </f:facet>
+                        <p:column selectionMode="multiple"  styleClass="checked-column"/>
+
+                        <p:column class="center" width="28" >
+                            <f:facet name="header">
+                                <h:outputText value="#"/>
+                            </f:facet>
+                            <h:outputText value="#{riv+1}" title="#{item.id}">
+                                <f:convertNumber pattern="000" />
+                            </h:outputText>
+                        </p:column>
+                        <ui:include src="/widget/peopleColumn.xhtml" >
+                            <ui:param value="#{true}" name="FILTER"/>
+                            <ui:param value="#{sessionController.pp['request:people']}" name="filter"/>
+                            <ui:param value="#{item.people}" name="drtPersonaNatural"/>
+                        </ui:include>
+                        <p:column width="250" filterBy="#{sessionController.pp['request:dependency']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['request:dependency']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Dependency}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dependency}"/>
+                        </p:column>
+                        <p:column width="250" filterBy="#{sessionController.pp['request:position']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['request:position']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Position}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.position.name}"/>
+                        </p:column>
+                        <p:column width="80"  styleClass="right">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Amount}"/>
+                            </f:facet>
+                            <h:outputText value="#{0.0+item.amount}" >
+                                <f:convertNumber locale="es_US" minFractionDigits="2"  />
+                            </h:outputText>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['request:description']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['request:description']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Description}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.description}"/>
+                        </p:column>
+                        <p:column width="80" class="center" filterBy="#{sessionController.pp['approval']}">
+                            <f:facet name="filter" >
+                                <p:inputText type="hidden" id="approval"  class="x-date-filter"  value="#{sessionController.pp['approval']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Approval}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.approval}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column width="80" class="center" >
+                            <f:facet name="header">
+                                <h:outputText value="#{'Tiempo Vencimiento'}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ext['timeElapsed']}"/>
+                        </p:column>
+                        <p:column width="80" class="center" filterBy="#{sessionController.pp['confirmed']}">
+                            <f:facet name="filter" >
+                                <p:inputText type="hidden" id="confirmed"  class="x-date-filter"  value="#{sessionController.pp['confirmed']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{'Rendición'}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.confirmed}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column width="80" class="center" filterBy="#{sessionController.pp['cancellation']}">
+                            <f:facet name="filter" >
+                                <p:inputText type="hidden" id="cancellation"  class="x-date-filter"  value="#{sessionController.pp['cancellation']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Cancellation}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.cancellation}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column/>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            <p:dialog id="Export" header="Exportar Datos" 
+                      rendered="#{viewParam.set('',sessionController.pp.putIfAbsent('TITLE_REPORT','REPORTE DE CARTAS FIANZAS'))!=null}">
+                <h:form id="ExportForm">
+                    <h:panelGroup id="display">
+                        <style>
+                            .gra .ui-form-layout .ui-grid-row{
+                                border-bottom: 1px solid #bfbebe;
+                            }
+                        </style>
+                        <p:panelGrid  columns="2" layout="grid" styleClass="ui-form-layout gra">
+                            <p:outputLabel for="order" value="Tipo de Reporte:" />
+                            <p:selectOneRadio id="order" styleClass="xs"  style="width: 100%"  columns="1" layout="grid" value="#{sessionController.pp['anexo']}">
+                                <f:selectItem itemLabel="Recibos Provisionales Seleccionados" itemValue="2" />
+                                <f:selectItem itemLabel="Recibos Provisionales Pendientes de Rendición" itemValue="3" />
+                            </p:selectOneRadio>
+                            <p:outputLabel for="console" value="Formato de Salida:" />
+                            <p:selectOneRadio id="console" styleClass="xs"  style="width: 100%"  columns="1" layout="grid" value="#{sessionController.pp['FORMAT']}">
+                                <f:selectItem itemLabel="Documento de Formato Portable (pdf)" itemValue="pdf" />
+                                <f:selectItem itemLabel="Hoja de Calculo Excel (xls)" itemValue="xls" />
+                            </p:selectOneRadio>
+                        </p:panelGrid>
+
+                        <center>
+
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" value="#{bundle.Download}"  onclick="PrimeFaces.monitorDownload(_.mask, _.unmask)">
+                                <p:fileDownload  value="#{requestController.getContent(sessionController.clonePageMap())}"/>
+                            </p:commandButton>
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </h:form>
+            </p:dialog>
+            <p:dialog id="Approve" header="Confirmar Operación">
+                <h:form id="ApproveForm">
+                    <h:panelGroup id="display">
+                        Aprobar una solicitud realizara el descuento del presupuesto asignado a la caja chica de la dependencia encargada de la dependencia solicitante. Esta seguro que desea aprobar la siguiente solicitud?
+                        <div style="padding-right:20px">
+                            <ul>
+                                <c:forEach items="#{requestController.selectedList}" var="item">
+                                    <li>
+                                        De ${item.people} por S/. ${item.amount}
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <center>
+                            <p:commandButton id="delete" icon="ui-icon-check" actionListener="#{requestController.process(viewParam.set('ACTION','approve').p)}" value="#{bundle.Approve}" update=":growl,:RequestList:datalist" oncomplete="_.c(this,args);"/>
+
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </h:form>
+
+            </p:dialog>
+            <p:dialog id="Delete" header="Confirmar Operación">
+                <h:form id="DeleteForm">
+                    <h:panelGroup id="display">
+                        Esta seguro que desea eliminar las solicitudes seleccionadas?
+                        <div style="padding-right:20px">
+                            <ul>
+                                <c:forEach items="#{requestController.selectedList}" var="item">
+                                    <li>
+                                        De ${item.people} por S/. ${item.amount}  aprovado en ${item.approval}
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <center>
+                            <p:commandButton id="delete" icon="ui-icon-trash" actionListener="#{requestController.destroy}" value="#{bundle.Delete}" update=":growl,:RequestList:datalist" oncomplete="_.c(this,args);"/>
+
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+
+</html>

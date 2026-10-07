@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/template.xhtml">
+        <ui:param name="NODE_TITLE" value="#{bundle.Expediente}s" />
+        <ui:define name="body">
+            <c:set value="#{systemController.access('ADMIN_TESORERIA_TBLEXPEDIENTE')}" var="ADMIN_TESORERIA_TBLEXPEDIENTE"/>
+            <v-form header="#{NODE_TITLE}">
+                    <v-table id="datalist" value="#{tblExpedienteController.dataModel}" var="item"
+                                 selection="#{tblExpedienteController.selectedList}"
+                                 paginator="true"
+                                 rowIndexVar="riv"
+                                 rowKey="#{item.id}"
+                                 rows="50"
+                                 rowsPerPageTemplate="50,100,150,200"
+                                 scrollable="true"
+                                 lazy="true"
+                                 >
+
+                        <f:facet name="header">
+                            <p:commandButton id="createButton" rendered="#{ADMIN_TESORERIA_TBLEXPEDIENTE}" icon="ui-icon-plus" styleClass="on" value="#{bundle.Create}" actionListener="#{viewParam.x(tblExpedienteController.prepareCreate()).include('/tesoreria/expediente/Create.xhtml').update('TblExpedienteCreate').set('UPDATE','TblExpedienteList')}" oncomplete="_.o('TblExpedienteCreate',args)"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" actionListener="#{viewParam.include('/tesoreria/expediente/View.xhtml').update('TblExpedienteView')}" oncomplete="_.o('TblExpedienteView',args)" />
+                            <p:commandButton id="editButton" rendered="#{ADMIN_TESORERIA_TBLEXPEDIENTE}" icon="ui-icon-pencil" value="#{bundle.Edit}" actionListener="#{viewParam.include('/tesoreria/expediente/Create.xhtml').update('TblExpedienteCreate').set('UPDATE','TblExpedienteList')}" oncomplete="_.o('TblExpedienteCreate',args)" />
+                            <p:commandButton id="deleteButton" rendered="#{ADMIN_TESORERIA_TBLEXPEDIENTE}" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":Delete" oncomplete="_.o('Delete',args)" />
+                            <p:commandButton id="exportButton" icon="ui-icon-arrowthick-1-s" styleClass="on"  value="#{bundle.Report}s" actionListener="#{sessionController.pp.put('option',1)}" update=":Export" oncomplete="_.o('Export',args)" />
+                        </f:facet>
+                        <p:column selectionMode="multiple"  styleClass="checked-column"/>
+
+                        <p:column class="center" width="28" >
+                            <f:facet name="header">
+                                <h:outputText value="#"/>
+                            </f:facet>
+                            <h:outputText value="#{riv+1}" title="#{item.id}">
+                                <f:convertNumber pattern="000" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column width="80" styleClass="center" filterBy="#{sessionController.pp['record:anio']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['record:anio']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Anio}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tblExpedientePK.anio}"/>
+                        </p:column>
+                        <p:column width="80" styleClass="center" filterBy="#{sessionController.pp['siaf']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['siaf']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.SIAF}"/>
+                            </f:facet>
+                            #{item.tblExpedientePK.numsiaf} 
+                            <h:outputText rendered="#{(item.tblExpedientePK.correlative ne 0)}" 
+                                          value="(#{item.tblExpedientePK.correlative})"/>
+                            
+                        </p:column>
+
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['numCompro']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['numCompro']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Voucher}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numCompro}"/>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['description']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['description']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Description}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripci}"/>
+                        </p:column>
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['ruc']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['ruc']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Ruc}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.ruc}"/>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['razonSocial']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['razonSocial']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.RazonSocial}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.razonSocial}"/>
+                        </p:column>
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['sisgedo']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['sisgedo']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.NumSISGEDO}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numSISGEDO}"/>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['estado']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['estado']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Status}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.estado}"/>
+                        </p:column>
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['numfolio']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['numfolio']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Numfolio}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numfolio}"/>
+                        </p:column>
+                        <p:column width="100" styleClass="right" filterBy="#{sessionController.pp['importe']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['importe']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Importe}"/>
+                            </f:facet>
+                            <h:outputText value="#{0.0+item.importe}" >
+                                <f:convertNumber locale="es_US" minFractionDigits="2"  />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['observaciones']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['observaciones']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Proyecto}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.observaciones}"/>
+                        </p:column>
+
+                        <p:column width="100" filterBy="#{sessionController.pp['metaCode']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['metaCode']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Meta}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.metaCode}"/>
+                        </p:column>
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['componenteCode']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['componenteCode']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Componente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.componenteCode}"/>
+                        </p:column>
+                        
+
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['local']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['local']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Local}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.incomeType.name}"/>
+                        </p:column>
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['estante']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['estante']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Estante}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.estante}"/>
+                        </p:column>
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['filaestante']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['filaestante']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Fila} #{bundle.Estante} "/>
+                            </f:facet>
+                            <h:outputText value="#{item.filaestante}"/>
+                        </p:column>
+
+                        <p:column width="100" class="center" filterBy="#{sessionController.pp['archivador']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['archivador']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Archivador}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.archivador}"/>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['observacion']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['observacion']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Observacion} "/>
+                            </f:facet>
+                            <h:outputText value="#{item.observacion}"/>
+                        </p:column>
+
+                        <p:column/>
+                    </v-table>
+             
+            </v-form>
+            <v-panel id="Export" header="Exportar Datos" 
+                      rendered="#{viewParam.set('',sessionController.pp.putIfAbsent('TITLE_REPORT','REPORTE DE CARTAS FIANZAS'))!=null}">
+                <v-form id="ExportForm">
+                    <h:panelGroup id="display">
+                        <style>
+                            .gra .ui-form-layout .ui-grid-row{
+                                border-bottom: 1px solid #bfbebe;
+                            }
+                        </style>
+                        <p:panelGrid  columns="2" layout="grid" styleClass="ui-form-layout gra">
+                            <p:outputLabel for="console" value="Formato de Salida:" />
+                            <p:selectOneRadio id="console" styleClass="xs"  style="width: 100%"  columns="1" layout="grid" value="#{sessionController.pp['FORMAT']}">
+                                <f:selectItem itemLabel="Documento de Formato Portable (pdf)" itemValue="pdf" />
+                                <f:selectItem itemLabel="Hoja de Calculo Excel (xls)" itemValue="xls" />
+                            </p:selectOneRadio>
+                        </p:panelGrid>
+                        
+                        <center>
+                            
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" value="#{bundle.Download}"  onclick="PrimeFaces.monitorDownload(_.mask, _.unmask)">
+                                <p:fileDownload  value="#{tblExpedienteController.getContent(sessionController.clonePageMap())}"/>
+                            </p:commandButton>
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </v-form>
+            </v-panel>
+            <v-panel id="Delete" header="Confirmar Operación">
+                <v-form id="DeleteForm">
+                    <h:panelGroup id="display">
+                        Esta seguro que desea eliminar los expedientes seleccionados?
+                        <div style="padding-right:20px">
+                            <ul>
+                                <c:forEach items="#{tblExpedienteController.selectedList}" var="item">
+                                    <li>
+                                        Exp. ${item.tblExpedientePK.anio}-${item.tblExpedientePK.numsiaf}: #{item.descripci}
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                        <center>
+                            <p:commandButton id="delete" icon="ui-icon-trash" actionListener="#{tblExpedienteController.destroy}" value="#{bundle.Delete}" update=":growl,:TblExpedienteList:datalist" oncomplete="_.c(this,args);"/>
+
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </v-form>
+            </v-panel>
+        </ui:define>
+    </ui:composition>
+
+</html>

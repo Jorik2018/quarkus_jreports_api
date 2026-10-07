@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{requestController.selected}" var="o"/>
+        <p:dialog id="RequestCreate" header="#{(empty o.id?bundle.Create:bundle.Edit)} #{bundle.Request}">
+            <h:form id="RequestCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" class="ui-form-layout" rendered="#{o != null}">
+                        <p:outputLabel value="#{bundle.Dependency}:" for="dependency" />
+                        <p:selectOneMenu id="dependency" converter="dependencyControllerConverter"  
+                                         filter="true"  filterMatchMode="contains"
+                                         value="#{o.dependency}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{dependencyController.getItems(viewParam.set('dependency',_USER.ext['dependency']).p)}"
+                                           var="i" itemValue="#{i}" itemLabel="#{i}" />
+
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.Position}:" for="position" />
+                        <p:selectOneMenu id="position"  
+                                         filter="true"  filterMatchMode="contains"
+                                         value="#{o.position}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}" />
+                            <f:selectItems value="#{positionController.getItems(viewParam.p)}"
+                                           var="i" itemValue="#{i}" itemLabel="#{i.name}" />
+
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.Directorio}:" for="people" />
+                        <p:outputPanel style="text-align: right">
+                            <c:if test="#{systemController.access('ADMIN_TESORERIA_REQUEST')}">
+                                <ui:include src="/widget/personaNaturalAutocomplete.xhtml">
+                                    <ui:param value="${o.people}" name="VALUE" />
+                                    <ui:param value="people" name="ID" />
+                                    <ui:param value="#{true}" name="REQUIRED" />
+                                </ui:include>
+                            </c:if>
+                            <p:commandButton style="margin-top: 5px" icon="ui-icon-search" value="Buscar Empleado" 
+                                             actionListener="#{viewParam.set('UPDATE','RequestCreateForm').set('CLIENT',requestController).include('/rh/contract/Busqueda.xhtml')}"  oncomplete="_.o('ContractBusquedaDlg')"
+                                             immediate="true"  />
+                        </p:outputPanel>
+                        <c:if test="#{not systemController.access('ADMIN_TESORERIA_REQUEST')}">
+                            <p:inputTextarea readonly="true" rows="1" id="people" value="#{personaNatural}" required="true"  />
+                        </c:if>
+                        <p:outputLabel value="#{bundle.Amount}:" for="amount" />
+                        <p:inputNumber id="amount" value="#{o.amount}" required="true" decimalSeparator="." thousandSeparator="," title="#{bundle.total}" />
+                        <p:outputLabel value="#{bundle.Description}:" for="description" />
+                        <p:inputTextarea required="true" id="description" value="#{o.description}" title="#{bundle.Description}" />
+                    </p:panelGrid>
+                    <center>
+                        <p:commandButton icon="ui-icon-disk" actionListener="#{requestController.create}" value="#{bundle.Save}" update="display,:growl" oncomplete="return _.c(this,args)"/>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

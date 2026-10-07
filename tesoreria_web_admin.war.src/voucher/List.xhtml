@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/template.xhtml">
+        <ui:param name="NODE_TITLE" value="#{bundle.Voucher}s" />
+        <ui:define name="body">
+            <c:set value="#{systemController.access('ADMIN_TESORERIA_VOUCHER')}" var="ADMIN_TESORERIA_VOUCHER"/>
+            <h:form id="VoucherList">
+                <p:panel header="#{NODE_TITLE}">
+                    <p:dataTable id="datalist" value="#{voucherController.dataModel}" var="item"
+                                 selection="#{voucherController.selectedList}"
+                                 paginator="true"
+                                 rowIndexVar="riv"
+                                 rowKey="#{item.id}"
+                                 rows="50"
+                                 rowsPerPageTemplate="50,100,150,200"
+                                 scrollable="true"
+                                 lazy="true"
+                                 >
+                        <f:facet name="header">
+                            <p:commandButton id="createButton" rendered="#{ADMIN_TESORERIA_VOUCHER}" icon="ui-icon-plus" styleClass="on" value="#{bundle.Create}" actionListener="#{viewParam.x(voucherController.prepareCreate(viewParam.set('inmediate',true).p)).include('/tesoreria/voucher/Create.xhtml').update('VoucherCreate').set('UPDATE','VoucherList')}" oncomplete="_.o('VoucherCreate',args)"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" actionListener="#{viewParam.include('/tesoreria/voucher/View.xhtml').update('VoucherView')}" oncomplete="_.o('VoucherView',args)" />
+                            <p:commandButton id="editButton" rendered="#{ADMIN_TESORERIA_VOUCHER}" icon="ui-icon-pencil" value="#{bundle.Edit}" actionListener="#{viewParam.x(voucherController.load(voucherController.selected)).include('/tesoreria/voucher/Create.xhtml').update('VoucherCreate').set('UPDATE','VoucherList')}" oncomplete="_.o('VoucherCreate',args)" />
+                            <p:commandButton id="deleteButton" rendered="#{ADMIN_TESORERIA_VOUCHER}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{voucherController.destroy}" update=":growl,datalist" />
+
+                            <p:commandButton id="exportButton" class="on" icon="ui-icon-arrowthick-1-s" value="#{bundle.Report}s" actionListener="#{sessionController.pp.put('option',1)}" update=":Export" oncomplete="_.o('Export',args)" />
+                        </f:facet>
+                        <p:column selectionMode="multiple"  styleClass="checked-column"/>
+                        <p:column class="center" width="28" >
+                            <f:facet name="header">
+                                <h:outputText value="#"/>
+                            </f:facet>
+                            <h:outputText value="#{riv+1}" title="#{item.id}">
+                                <f:convertNumber pattern="000" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column width="80" class="center" filterBy="#{sessionController.pp['fecha']}">
+                            <f:facet name="filter" >
+                                <p:inputText type="hidden" id="fecha"  class="x-date-filter"  value="#{sessionController.pp['fecha']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Fecha}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fecha}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"  />
+                            </h:outputText>
+                        </p:column>
+                        <ui:include src="/widget/peopleColumn.xhtml" >
+                            <ui:param value="#{true}" name="FILTER"/>
+                            <ui:param value="#{sessionController.pp['voucher:people']}" name="filter"/>
+                            <ui:param value="#{item.request.people}" name="drtPersonaNatural"/>
+                        </ui:include>
+
+                        <p:column width="250" filterBy="#{sessionController.pp['voucher:dependency']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['voucher:dependency']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Dependency}"/>
+                            </f:facet>
+                            <a href="/admin/dependency/#{item.request.dependency.id}">
+                                <h:outputText value="#{item.request.dependency}"/>
+                            </a>
+                        </p:column>
+                        <p:column width="250" filterBy="#{sessionController.pp['voucher:provider']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['voucher:provider']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Provider}"/>
+                            </f:facet>
+                            <h:outputText rendered="#{empty item.provider}" value="#{item.providerId}" style="color:red"/>
+                            <a href="/admin/directorio/#{item.provider.idDir}">
+                                <h:outputText value="#{item.provider}"/>
+                            </a>
+                        </p:column>
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['voucher_type']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['voucher_type']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Type}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.voucherType.name}"/>
+                        </p:column>
+                        <p:column width="200" filterBy="#{sessionController.pp['voucher:document']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['voucher:document']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Documento}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.documento}"/>
+                        </p:column>
+
+                        <p:column width="200" filterBy="#{sessionController.pp['voucher:detail']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['voucher:detail']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Detail}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.detail}"/>
+                        </p:column>
+                        <p:column width="100" styleClass="center" filterBy="#{sessionController.pp['clasificador']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['clasificador']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Clasificador}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.clasificador}"/>
+                        </p:column>
+                        <p:column width="80" styleClass="right" filterBy="#{sessionController.pp['amount']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['amount']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Amount}"/>
+                            </f:facet>
+                            <h:outputText value="#{0.0+item.amount}" >
+                                <f:convertNumber locale="es_US" minFractionDigits="2"  />
+                            </h:outputText>
+                        </p:column>
+                        <p:column/>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            <p:dialog id="Export" header="Reportes" 
+                      rendered="#{viewParam.set('',sessionController.pp.putIfAbsent('TITLE_REPORT','REPORTE DE CARTAS FIANZAS'))!=null}">
+                <h:form id="ExportForm">
+                    <h:panelGroup id="display">
+                        <style>
+                            .gra .ui-form-layout .ui-grid-row{
+                                border-bottom: 1px solid #bfbebe;
+                            }
+                        </style>
+                        <p:panelGrid  columns="2" layout="grid" styleClass="ui-form-layout gra">
+                            <p:outputLabel for="order" value="Tipo de Reporte:" />
+                            <p:selectOneRadio id="order" styleClass="xs"  style="width: 100%"  columns="1" layout="grid" value="#{sessionController.pp['anexo']}">
+                                <f:selectItem itemLabel="Rendición de la Caja Chica" itemValue="4" />
+                            </p:selectOneRadio>
+                            <p:outputLabel for="console" value="Formato de Salida:" />
+                            <p:selectOneRadio id="console" styleClass="xs"  style="width: 100%"  columns="1" layout="grid" value="#{sessionController.pp['FORMAT']}">
+                                <f:selectItem itemLabel="Documento de Formato Portable (pdf)" itemValue="pdf" />
+                                <f:selectItem itemLabel="Hoja de Calculo Excel (xls)" itemValue="xls" />
+                            </p:selectOneRadio>
+                        </p:panelGrid>
+
+                        <center>
+
+                            <p:commandButton ajax="false" icon="ui-icon-arrowthick-1-s" value="#{bundle.Download}"  onclick="PrimeFaces.monitorDownload(_.mask, _.unmask)">
+                                <p:fileDownload  value="#{voucherController.getContent(sessionController.clonePageMap())}"/>
+                            </p:commandButton>
+                            <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                        </center>
+                    </h:panelGroup>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+
+</html>

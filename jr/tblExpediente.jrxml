@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="098699a1-e762-442f-a79b-9e50a9e00d3c">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1">
+		<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+			<topPen lineWidth="0.25"/>
+			<leftPen lineWidth="0.25"/>
+			<bottomPen lineWidth="0.25"/>
+			<rightPen lineWidth="0.25"/>
+		</box>
+	</style>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="anio" class="java.lang.Integer">
+		<fieldDescription><![CDATA[tblExpedientePK.anio]]></fieldDescription>
+	</field>
+	<field name="numsiaf" class="java.lang.Integer">
+		<fieldDescription><![CDATA[tblExpedientePK.numsiaf]]></fieldDescription>
+	</field>
+	<field name="numCompro" class="java.lang.String">
+		<fieldDescription><![CDATA[numCompro]]></fieldDescription>
+	</field>
+	<field name="descripci" class="java.lang.String">
+		<fieldDescription><![CDATA[descripci]]></fieldDescription>
+	</field>
+	<field name="importe" class="java.lang.Double">
+		<fieldDescription><![CDATA[importe]]></fieldDescription>
+	</field>
+	<field name="numfolio" class="java.lang.Integer">
+		<fieldDescription><![CDATA[numfolio]]></fieldDescription>
+	</field>
+	<field name="observacion" class="java.lang.String">
+		<fieldDescription><![CDATA[observacion]]></fieldDescription>
+	</field>
+	<field name="observaciones" class="java.lang.String">
+		<fieldDescription><![CDATA[observaciones]]></fieldDescription>
+	</field>
+	<field name="componenteCode" class="java.lang.String">
+		<fieldDescription><![CDATA[componenteCode]]></fieldDescription>
+	</field>
+	<field name="metaCode" class="java.lang.String">
+		<fieldDescription><![CDATA[metaCode]]></fieldDescription>
+	</field>
+	<field name="razonSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[razonSocial]]></fieldDescription>
+	</field>
+	<group name="anio" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{anio}]]></groupExpression>
+		<groupHeader>
+			<band height="28">
+				<staticText>
+					<reportElement style="style1" x="30" y="14" width="30" height="14" uuid="7bca6de2-9270-4c17-9162-38f187454023"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SIAF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="60" y="14" width="30" height="14" uuid="de292506-8239-4ba0-80b0-68d6e1238da1"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[C/P]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="90" y="14" width="217" height="14" uuid="6b9d6be4-d1dc-42be-8cc8-87b7af23356e"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Detalle]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="450" y="14" width="61" height="14" uuid="d3efd637-64bb-42a1-a605-d44161f378ad"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[importe]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="511" y="14" width="37" height="14" uuid="80ae7708-98dc-4748-b03e-f72271fc6581"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Folios]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="702" y="14" width="100" height="14" uuid="f891805c-2ae8-4791-989d-106cf8bdb317"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Observación]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="648" y="14" width="54" height="14" uuid="ae10504f-317f-4c0c-ac17-a3bbda3199ff"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Proyecto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="548" y="14" width="65" height="14" uuid="8e285577-95c6-49fb-a4cd-357308de3f9f"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Componente]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="22" y="0" width="46" height="14" uuid="bf9080b0-5e55-425f-814e-7c6f89877fb1"/>
+					<textElement>
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{anio}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="style1" x="307" y="14" width="143" height="14" uuid="c90e0589-ba5e-499c-9850-5e709103d1f0"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Razon Social]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="613" y="14" width="35" height="14" uuid="ee934217-8d70-4f50-b85f-767bc3ae30ea"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Meta]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style1" x="0" y="14" width="30" height="14" uuid="38d1ec86-3887-4871-9037-ba29ced1cb8f"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="22" height="14" uuid="8e54ea62-928a-44d1-8111-f99263ecd77c"/>
+					<textElement markup="none">
+						<font fontName="Arial" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AÑO: ]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="14" uuid="b15684c1-9af7-4ae0-8ccd-46ede25d1389"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE COMPROBANTES DE PAGO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="30" y="0" width="30" height="14" uuid="57aeae54-d543-4784-94f6-48d5b36813de"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numsiaf}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="60" y="0" width="30" height="14" uuid="7b8ae6c7-a1a3-4b1c-8f15-30ad6964c86f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numCompro}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="90" y="0" width="217" height="14" uuid="5eca13f2-f6cd-4a30-b316-3985c633c5d4"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripci}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="450" y="0" width="61" height="14" uuid="0175ba81-c715-491b-964d-08ebf6e9dc8b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="511" y="0" width="37" height="14" uuid="f93c19dd-27cf-4528-85a9-58bceb3226c7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numfolio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="702" y="0" width="100" height="14" uuid="53bee906-e683-45b9-b012-2e0292921fa9"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="648" y="0" width="54" height="14" uuid="a6f74ac4-6002-46a3-b818-f7868040cabd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="548" y="0" width="65" height="14" uuid="98c38a6e-96ec-4bcb-a33e-6206e0ade0dd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{componenteCode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="307" y="0" width="143" height="14" uuid="111786e6-68fc-427e-8dc1-0907d2adef1b"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="613" y="0" width="35" height="14" uuid="12627af9-69f3-472c-a96c-d272faeb07d8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{metaCode}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0000">
+				<reportElement style="style1" stretchType="RelativeToTallestObject" x="0" y="0" width="30" height="14" uuid="c8f83127-9460-4a0e-8b3d-ae2fef64fa9e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{anio_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <c:set value="#{tblToperacionController.selected}" var="o"/>
+        <p:dialog id="TblToperacionCreate" header="#{(empty o.id?bundle.Create:bundle.Edit)} #{bundle.Tipo} #{bundle.Operacion} ">
+            <h:form id="TblToperacionCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="1" layout="grid" rendered="#{o != null}">
+                        <p:outputLabel value="#{bundle.Name}:" for="descripOpera" />
+                        <p:inputText required="true" id="descripOpera" value="#{o.name}" title="#{bundle.name}" />
+                    </p:panelGrid>
+                    <center>
+                        <p:commandButton icon="ui-icon-disk" actionListener="#{tblToperacionController.create}" value="#{bundle.Save}" update="display,:growl" oncomplete="return _.c(this,args)"/>
+                        <p:button icon="ui-icon-cancel" value="#{bundle.Cancel}" onclick="return _.c(this)"/>
+                    </center>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/template.xhtml">
+        <ui:param name="NODE_TITLE" value="#{bundle.Tipo} #{bundle.Operacion}" />
+        <ui:define name="body">
+            <c:set value="#{systemController.access('ADMIN_TESORERIA_TBLTOPERACION')}" var="ADMIN_TESORERIA_TBLTOPERACION"/>
+            <h:form id="TblToperacionList">
+                <p:panel header="#{NODE_TITLE}">
+                    <p:dataTable id="datalist" value="#{tblToperacionController.dataModel}" var="item"
+                                 selection="#{tblToperacionController.selectedList}"
+                                 paginator="true"
+                                 rowIndexVar="riv"
+                                 rowKey="#{item.id}"
+                                 rows="50"
+                                 rowsPerPageTemplate="50,100,150,200"
+                                 scrollable="true"
+                                 lazy="true"
+                                 >
+
+                        <f:facet name="header">
+                            <p:commandButton id="createButton" rendered="#{ADMIN_TESORERIA_TBLTOPERACION}" icon="ui-icon-plus" styleClass="on" value="#{bundle.Create}" actionListener="#{viewParam.x(tblToperacionController.prepareCreate()).include('/tesoreria/operationType/Create.xhtml').update('TblToperacionCreate').set('UPDATE','TblToperacionList')}" oncomplete="_.o('TblToperacionCreate',args)"/>
+                            
+                            <p:commandButton id="editButton" rendered="#{ADMIN_TESORERIA_TBLTOPERACION}" icon="ui-icon-pencil" value="#{bundle.Edit}" actionListener="#{viewParam.include('/tesoreria/operationType/Create.xhtml').update('TblToperacionCreate').set('UPDATE','TblToperacionList')}" oncomplete="_.o('TblToperacionCreate',args)" />
+                            <p:commandButton id="deleteButton" rendered="#{ADMIN_TESORERIA_TBLTOPERACION}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{tblToperacionController.destroy}" update=":growl,datalist" />
+                        </f:facet>
+                        <p:column selectionMode="multiple"  styleClass="checked-column"/>
+
+                        <p:column class="center" width="28" >
+                            <f:facet name="header">
+                                <h:outputText value="#"/>
+                            </f:facet>
+                            <h:outputText value="#{riv+1}" title="#{item.id}">
+                                <f:convertNumber pattern="000" />
+                            </h:outputText>
+                        </p:column>
+                  
+                        <p:column width="200" filterBy="#{sessionController.pp['descripOpera']}">
+                            <f:facet name="filter" >
+                                <p:inputText  value="#{sessionController.pp['descripOpera']}" />
+                            </f:facet>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.Name}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column/>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

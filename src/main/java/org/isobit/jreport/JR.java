@@ -492,6 +492,10 @@ public class JR
         JsonDataSource json = new JsonDataSource((File) ds);
         json.setLocale(Locale.US);
         reportDS = json;
+      } else if (ds instanceof java.nio.file.Path) {
+        JsonDataSource json = new JsonDataSource(((java.nio.file.Path) ds).toFile());
+        json.setLocale(Locale.US);
+        reportDS = json;
       }
       if (map.containsKey("TOC")) {
         // map.put("TOC", new dTableContent());

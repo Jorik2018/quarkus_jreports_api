@@ -337,7 +337,7 @@ public class Resource {
 		params.put(JR.EXTENSION, extension);
 		Object o = org.isobit.jreport.JR.open(jr, params);
 		String filename = "report-" + new Date().getTime() + "." + extension;
-		return javax.ws.rs.core.Response.ok(o, MediaType.APPLICATION_OCTET_STREAM)
+		return Response.ok(o, MediaType.APPLICATION_OCTET_STREAM)
 				.header("content-disposition", "attachment; filename = " + filename).build();
 	}
 

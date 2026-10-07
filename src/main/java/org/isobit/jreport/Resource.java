@@ -97,9 +97,7 @@ public class Resource {
 
 			String filename = getFileName(filePart);
 
-			String template = getTextPart(
-					form,
-					"template");
+			String template = getTextPart(form, "template");
 
 			String extension = getOptionalTextPart(
 					form,
@@ -150,41 +148,24 @@ public class Resource {
 					"Jasper: " +
 							jasperFile);
 
-			System.out.println(
-					"Filename: " +
-							filename);
+			System.out.println("Filename: " + filename);
+			System.out.println("Output: " + output);
 
-			System.out.println(
-					"Output: " +
-							output);
-
-			/*
-			 * JSON
-			 */
-			if (filename
-					.toLowerCase()
-					.endsWith(".json")) {
+			if (filename.toLowerCase().endsWith(".json")) {
 
 				tempFile = Files.createTempFile(
 						"jreport-",
 						".json");
 
-				try (
-						InputStream in = inputStream;
-
-						OutputStream out = Files.newOutputStream(
-								tempFile)) {
-
+				try (InputStream in = inputStream;
+						OutputStream out = Files.newOutputStream(tempFile)) {
 					in.transferTo(out);
 				}
 
 				File file = tempFile.toFile();
 
-				try (
-						Jsonb jsonb = JsonbBuilder.create();
-
-						InputStream jsonInput = new FileInputStream(
-								file)) {
+				try (Jsonb jsonb = JsonbBuilder.create();
+						InputStream jsonInput = new FileInputStream(file)) {
 
 					Object parsed = jsonb.fromJson(
 							jsonInput,
@@ -192,19 +173,19 @@ public class Resource {
 
 					if (original != null) {
 
-						parameters.put(
-								DataSource.class,
-								file);
+						parameters.put(DataSource.class, file);
 
 					} else if (parsed instanceof Map) {
 
 						Map<?, ?> jsonMap = (Map<?, ?>) parsed;
 
 						for (Map.Entry<?, ?> entry : jsonMap.entrySet()) {
-							parameters.put(entry.getKey(),entry.getValue());
+							parameters.put(entry.getKey(), entry.getValue());
 						}
 
 						Object data = parameters.remove("data");
+
+						System.out.println("Data: " + data);
 
 						try (OutputStream out = Files.newOutputStream(tempFile)) {
 							jsonb.toJson(data, out);
@@ -256,9 +237,7 @@ public class Resource {
 				}
 			}
 
-			parameters.put(
-					"rest",
-					Boolean.TRUE);
+			parameters.put("rest",Boolean.TRUE);
 
 			Object result = JR.open(
 					jasperFile,

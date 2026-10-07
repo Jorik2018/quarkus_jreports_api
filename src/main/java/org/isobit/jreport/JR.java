@@ -520,7 +520,7 @@ public class JR
 
         JsonDataSource json = new JsonDataSource(
             path.toFile());
-
+        json.setDatePattern("yyyy-MM-dd'T'HH:mm:ss");
         json.setLocale(Locale.US);
 
         reportDS = json;

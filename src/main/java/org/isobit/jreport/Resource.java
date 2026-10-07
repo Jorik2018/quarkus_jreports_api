@@ -139,15 +139,11 @@ public class Resource {
 
 			String jasperFile = template;
 
-			if (!jasperFile.endsWith(
-					".jasper")) {
+			if (!jasperFile.endsWith(".jasper")) {
 				jasperFile += ".jasper";
 			}
 
-			System.out.println(
-					"Jasper: " +
-							jasperFile);
-
+			System.out.println("Jasper: " + jasperFile);
 			System.out.println("Filename: " + filename);
 			System.out.println("Output: " + output);
 
@@ -237,7 +233,7 @@ public class Resource {
 				}
 			}
 
-			parameters.put("rest",Boolean.TRUE);
+			parameters.put("rest", Boolean.TRUE);
 
 			Object result = JR.open(
 					jasperFile,

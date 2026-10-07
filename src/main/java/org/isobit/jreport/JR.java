@@ -425,7 +425,6 @@ public class JR
   public static JasperPrint getJasperPrint(JasperReport jasperReport, Object ds, Map map)
       throws JRException, IOException {
     JasperPrint masterJP = null;
-    System.out.println("=========================DADADADAD");
     if (map != null) {
       if (map.containsKey("REPORT_OFFSET")) {
         map.put("REPORT_OFFSET", Integer.valueOf(XUtil.intValue(map.get("REPORT_OFFSET"))));
@@ -493,8 +492,37 @@ public class JR
         json.setLocale(Locale.US);
         reportDS = json;
       } else if (ds instanceof java.nio.file.Path) {
-        JsonDataSource json = new JsonDataSource(((java.nio.file.Path) ds).toFile());
+
+        java.nio.file.Path path = (java.nio.file.Path) ds;
+
+        try {
+          System.out.println(
+              "===== JSON PATH =====");
+
+          System.out.println(
+              path.toAbsolutePath());
+
+          System.out.println(
+              "===== JSON CONTENT =====");
+
+          String content = java.nio.file.Files.readString(
+              path,
+              java.nio.charset.StandardCharsets.UTF_8);
+
+          System.out.println(content);
+
+          System.out.println(
+              "===== END JSON =====");
+
+        } catch (java.io.IOException e) {
+          e.printStackTrace();
+        }
+
+        JsonDataSource json = new JsonDataSource(
+            path.toFile());
+
         json.setLocale(Locale.US);
+
         reportDS = json;
       }
       if (map.containsKey("TOC")) {

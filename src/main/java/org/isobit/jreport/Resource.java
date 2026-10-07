@@ -81,7 +81,7 @@ public class Resource {
 	public Response sendMultipartData(
 			MultipartFormDataInput input) {
 
-		Path tempFile = null;
+		java.nio.file.Path tempFile = null;
 
 		try {
 

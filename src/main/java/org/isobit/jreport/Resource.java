@@ -372,12 +372,14 @@ public class Resource {
 		InputStream inputStream = data.file;
 		data.extension = data.extension != null ? data.extension : "pdf";
 		m.put(JR.EXTENSION, data.extension);
-		// InputStreamReader inputStreamReader = new InputStreamReader(initialStream);
-
 		JR.setUPLOAD_DIR(uploadDir);
 		String jasperFile = data.template;
 		if (!jasperFile.endsWith(".jasper"))
 			jasperFile = jasperFile + ".jasper";
+
+		System.out.println("Jasper: " + jasperFile);
+		System.out.println("Filename: " + filename);
+		System.out.println("Output: " + output);
 
 		if (filename.endsWith("json")) {
 			File file = new File("tmp.json");

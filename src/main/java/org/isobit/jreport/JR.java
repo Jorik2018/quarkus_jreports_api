@@ -587,6 +587,7 @@ public class JR
         }
         map.put("xyz", jaspertPrintList);
       } else {
+        System.out.println("reportDS=" + reportDS);
         masterJP = (reportDS != null
             ? JasperFillManager.fillReport(jasperReport, map, reportDS)
             : JasperFillManager.fillReport(jasperReport, map, (Connection) map.get("cnx")));

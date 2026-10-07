@@ -3,12 +3,21 @@ POST http://38.250.177.7:1128
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="text"
+Content-Disposition: form-data; name="template"
 
-title
+cartaFianza
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="image"; filename="test.json"
+Content-Disposition: form-data; name="extension"
+
+pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="output"
+
+warrant.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.json"
 Content-Type: image/png
 
 < ./test.json
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+

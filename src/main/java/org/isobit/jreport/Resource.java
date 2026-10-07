@@ -66,11 +66,475 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Path("")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class Resource {
+
+	@POST
+	@Path("v2")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@javax.ws.rs.Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response sendMultipartData(
+			MultipartFormDataInput input) {
+
+		Path tempFile = null;
+
+		try {
+
+			Map<String, List<InputPart>> form = input.getFormDataMap();
+
+			InputPart filePart = getRequiredPart(
+					form,
+					"file");
+
+			InputStream inputStream = filePart.getBody(
+					InputStream.class,
+					null);
+
+			String filename = getFileName(filePart);
+
+			String template = getTextPart(
+					form,
+					"template");
+
+			String extension = getOptionalTextPart(
+					form,
+					"extension",
+					"pdf");
+
+			String output = getOptionalTextPart(
+					form,
+					"output",
+					null);
+
+			String original = getOptionalTextPart(
+					form,
+					"original",
+					null);
+
+			if (template == null ||
+					template.trim().isEmpty()) {
+				throw new WebApplicationException(
+						"template es requerido",
+						Response.Status.BAD_REQUEST);
+			}
+
+			if (filename == null ||
+					filename.trim().isEmpty()) {
+				throw new WebApplicationException(
+						"el campo file debe incluir filename",
+						Response.Status.BAD_REQUEST);
+			}
+
+			Map<Object, Object> parameters = new java.util.HashMap<>();
+
+			parameters.put(
+					JR.EXTENSION,
+					extension);
+
+			JR.setUPLOAD_DIR(
+					uploadDir);
+
+			String jasperFile = template;
+
+			if (!jasperFile.endsWith(
+					".jasper")) {
+				jasperFile += ".jasper";
+			}
+
+			System.out.println(
+					"Jasper: " +
+							jasperFile);
+
+			System.out.println(
+					"Filename: " +
+							filename);
+
+			System.out.println(
+					"Output: " +
+							output);
+
+			/*
+			 * JSON
+			 */
+			if (filename
+					.toLowerCase()
+					.endsWith(".json")) {
+
+				tempFile = Files.createTempFile(
+						"jreport-",
+						".json");
+
+				try (
+						InputStream in = inputStream;
+
+						OutputStream out = Files.newOutputStream(
+								tempFile)) {
+
+					in.transferTo(out);
+				}
+
+				File file = tempFile.toFile();
+
+				try (
+						Jsonb jsonb = JsonbBuilder.create();
+
+						InputStream jsonInput = new FileInputStream(
+								file)) {
+
+					Object parsed = jsonb.fromJson(
+							jsonInput,
+							Object.class);
+
+					if (original != null) {
+
+						parameters.put(
+								DataSource.class,
+								file);
+
+					} else if (parsed instanceof Map) {
+
+						Map<?, ?> jsonMap = (Map<?, ?>) parsed;
+
+						for (Map.Entry<?, ?> entry : jsonMap.entrySet()) {
+							parameters.put(
+									entry.getKey(),
+									entry.getValue());
+						}
+
+						Object data = parameters.remove(
+								"data");
+
+						/*
+						 * Jasper espera el datasource
+						 * como archivo JSON.
+						 */
+						try (
+								OutputStream out = Files.newOutputStream(
+										tempFile)) {
+							jsonb.toJson(
+									data,
+									out);
+						}
+
+						parameters.put(
+								DataSource.class,
+								file);
+
+					} else if (parsed instanceof List) {
+
+						parameters.put(
+								DataSource.class,
+								parsed);
+
+					} else {
+
+						parameters.put(
+								DataSource.class,
+								file);
+					}
+				}
+
+				/*
+				 * SERIALIZADO JAVA
+				 */
+			} else {
+
+				try (
+						InputStream in = inputStream;
+
+						ObjectInputStream objectInput = new ObjectInputStream(
+								in)) {
+
+					Object object = objectInput.readObject();
+
+					if (!(object instanceof Map)) {
+						throw new WebApplicationException(
+								"el archivo serializado debe contener un Map",
+								Response.Status.BAD_REQUEST);
+					}
+
+					Map<?, ?> map = (Map<?, ?>) object;
+
+					for (Map.Entry<?, ?> entry : map.entrySet()) {
+						parameters.put(
+								entry.getKey(),
+								entry.getValue());
+					}
+
+					parameters.put(
+							DataSource.class,
+							map.get("data"));
+				}
+			}
+
+			parameters.put(
+					"rest",
+					Boolean.TRUE);
+
+			Object result = JR.open(
+					jasperFile,
+					parameters);
+
+			if (output == null ||
+					output.trim().isEmpty()) {
+				output = template +
+						"." +
+						extension;
+			}
+
+			return Response
+					.ok(
+							result,
+							MediaType.APPLICATION_OCTET_STREAM)
+					.header(
+							"Content-Disposition",
+							"attachment; filename=\"" +
+									output +
+									"\"")
+					.build();
+
+		} catch (WebApplicationException e) {
+
+			throw e;
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			throw new WebApplicationException(
+					"Error generando reporte: " +
+							e.getMessage(),
+					Response.Status.INTERNAL_SERVER_ERROR);
+
+		} finally {
+
+			/*
+			 * OJO:
+			 *
+			 * Solo elimina aquí si JR.open()
+			 * consume completamente el archivo
+			 * antes de retornar.
+			 */
+			if (tempFile != null) {
+
+				try {
+					Files.deleteIfExists(
+							tempFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private InputPart getRequiredPart(
+			Map<String, List<InputPart>> form,
+			String name) {
+
+		List<InputPart> parts = form.get(name);
+
+		if (parts == null ||
+				parts.isEmpty()) {
+			throw new WebApplicationException(
+					"campo requerido: " +
+							name,
+					Response.Status.BAD_REQUEST);
+		}
+
+		return parts.get(0);
+	}
+
+	private String getTextPart(
+			Map<String, List<InputPart>> form,
+			String name) throws Exception {
+
+		InputPart part = getRequiredPart(
+				form,
+				name);
+
+		return part
+				.getBodyAsString()
+				.trim();
+	}
+
+	private String getOptionalTextPart(
+			Map<String, List<InputPart>> form,
+			String name,
+			String defaultValue) throws Exception {
+
+		List<InputPart> parts = form.get(name);
+
+		if (parts == null ||
+				parts.isEmpty()) {
+			return defaultValue;
+		}
+
+		String value = parts
+				.get(0)
+				.getBodyAsString();
+
+		if (value == null) {
+			return defaultValue;
+		}
+
+		value = value.trim();
+
+		return value.isEmpty()
+				? defaultValue
+				: value;
+	}
+
+	private String getFileName(
+			InputPart part) {
+
+		MultivaluedMap<String, String> headers = part.getHeaders();
+
+		String disposition = headers.getFirst(
+				"Content-Disposition");
+
+		if (disposition == null) {
+			return null;
+		}
+
+		for (String item : disposition.split(";")) {
+
+			String value = item.trim();
+
+			if (value.startsWith(
+					"filename=")) {
+
+				String filename = value.substring(
+						"filename=".length());
+
+				if (filename.length() >= 2 &&
+						filename.startsWith("\"") &&
+						filename.endsWith("\"")) {
+
+					filename = filename.substring(
+							1,
+							filename.length() - 1);
+				}
+
+				/*
+				 * Evita recibir rutas completas
+				 * tipo C:\fakepath\test.json
+				 */
+				filename = filename.replace(
+						"\\",
+						"/");
+
+				int index = filename.lastIndexOf('/');
+
+				if (index >= 0) {
+					filename = filename.substring(
+							index + 1);
+				}
+
+				return filename;
+			}
+		}
+
+		return null;
+	}
+
+	@POST
+	@Path("")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	// @Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Object sendMultipartData(@MultipartForm MultipartBody data) {
+
+		Map m = new HashMap();
+		String filename = "" + data.filename;
+		String output = data.output;
+		// X.log("data.filename=" + data.filename);
+		InputStream inputStream = data.file;
+		data.extension = data.extension != null ? data.extension : "pdf";
+		m.put(JR.EXTENSION, data.extension);
+		JR.setUPLOAD_DIR(uploadDir);
+		String jasperFile = data.template;
+		if (!jasperFile.endsWith(".jasper"))
+			jasperFile = jasperFile + ".jasper";
+
+		System.out.println("Jasper: " + jasperFile);
+		System.out.println("Filename: " + filename);
+		System.out.println("Output: " + output);
+
+		if (filename.endsWith("json")) {
+			File file = new File("tmp.json");
+			/* Stream<String> reader= new BufferedReader(inputStreamReader).lines(); */
+
+			/*
+			 * try (OutputStreamWriter writer = new OutputStreamWriter(new
+			 * FileOutputStream(file), StandardCharsets.UTF_8)) {
+			 * writer.write(reader.collect(Collectors.joining())); }catch (IOException e) {
+			 * // TODO Auto-generated catch block e.printStackTrace(); }
+			 */
+
+			/*
+			 * final BufferedWriter writer; String line; try ( writer =
+			 * Files.newBufferedWriter(dst, StandardCharsets.UTF_8); ) { while ((line =
+			 * reader.readLine()) != null) { writer.write(line); writer.newLine(); } }
+			 */
+			try {
+				OutputStream outStream = new FileOutputStream(file);
+				byte[] buffer = new byte[8 * 1024];
+				int bytesRead;
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					outStream.write(buffer, 0, bytesRead);
+				}
+				IOUtils.closeQuietly(outStream);
+				System.out.println(file.getAbsolutePath());
+				Jsonb jsonb = JsonbBuilder.create();
+				Object p = jsonb.fromJson(new FileInputStream(file), Object.class);
+
+				if (data.original != null) {
+					m.put(DataSource.class, file);
+				} else if (p instanceof Map) {
+					m.putAll((Map) p);
+					m.put(DataSource.class, m.remove("data"));
+					jsonb.toJson(m.get(DataSource.class), new FileOutputStream(file));
+					m.put(DataSource.class, file);
+					System.out.println(m.get(DataSource.class));
+					System.out.println(m.keySet());
+				} else if (p instanceof List) {
+					System.out.println("====" + new ObjectMapper().writeValueAsString(p));
+					m.put(DataSource.class, (List) p);
+				} else
+					m.put(DataSource.class, file);
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				ObjectInputStream ois = new ObjectInputStream(inputStream);
+				Map map = (Map) ois.readObject();
+				m.putAll(map);
+				m.put(DataSource.class, map.get("data"));
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		if (inputStream != null)
+			IOUtils.closeQuietly(inputStream);
+
+		m.put("rest", true);
+		System.out.println(jasperFile.toString());
+		Object o = org.isobit.jreport.JR.open(jasperFile.toString(), m);
+		if (output == null) {
+			output = data.template + "." + data.extension;
+		}
+
+		filename = "report-" + new Date().getTime();
+		return javax.ws.rs.core.Response.ok(o, MediaType.APPLICATION_OCTET_STREAM)
+				.header("content-disposition", "attachment; filename = " + output).build();
+	}
 
 	@PostConstruct
 	void init() {
@@ -359,100 +823,7 @@ public class Resource {
 	 * ReportExporter.exportReportHtml(this.jp, System.getProperty("user.dir") +
 	 * "/target/reports/" + this.getClass().getName() + ".html"); }
 	 */
-	@POST
-	@Path("")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// @Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Object sendMultipartData(@MultipartForm MultipartBody data) {
 
-		Map m = new HashMap();
-		String filename = "" + data.filename;
-		String output = data.output;
-		// X.log("data.filename=" + data.filename);
-		InputStream inputStream = data.file;
-		data.extension = data.extension != null ? data.extension : "pdf";
-		m.put(JR.EXTENSION, data.extension);
-		JR.setUPLOAD_DIR(uploadDir);
-		String jasperFile = data.template;
-		if (!jasperFile.endsWith(".jasper"))
-			jasperFile = jasperFile + ".jasper";
-
-		System.out.println("Jasper: " + jasperFile);
-		System.out.println("Filename: " + filename);
-		System.out.println("Output: " + output);
-
-		if (filename.endsWith("json")) {
-			File file = new File("tmp.json");
-			/* Stream<String> reader= new BufferedReader(inputStreamReader).lines(); */
-
-			/*
-			 * try (OutputStreamWriter writer = new OutputStreamWriter(new
-			 * FileOutputStream(file), StandardCharsets.UTF_8)) {
-			 * writer.write(reader.collect(Collectors.joining())); }catch (IOException e) {
-			 * // TODO Auto-generated catch block e.printStackTrace(); }
-			 */
-
-			/*
-			 * final BufferedWriter writer; String line; try ( writer =
-			 * Files.newBufferedWriter(dst, StandardCharsets.UTF_8); ) { while ((line =
-			 * reader.readLine()) != null) { writer.write(line); writer.newLine(); } }
-			 */
-			try {
-				OutputStream outStream = new FileOutputStream(file);
-				byte[] buffer = new byte[8 * 1024];
-				int bytesRead;
-				while ((bytesRead = inputStream.read(buffer)) != -1) {
-					outStream.write(buffer, 0, bytesRead);
-				}
-				IOUtils.closeQuietly(outStream);
-				System.out.println(file.getAbsolutePath());
-				Jsonb jsonb = JsonbBuilder.create();
-				Object p = jsonb.fromJson(new FileInputStream(file), Object.class);
-
-if(data.original!=null){
-m.put(DataSource.class, file);
-}else
-				if (p instanceof Map) {
-					m.putAll((Map) p);
-					m.put(DataSource.class, m.remove("data"));
-					jsonb.toJson(m.get(DataSource.class), new FileOutputStream(file));
-					m.put(DataSource.class, file);
-					System.out.println(m.get(DataSource.class));
-					System.out.println(m.keySet());
-				}else if (p instanceof List) {
-					System.out.println("===="+new ObjectMapper().writeValueAsString(p));
-					m.put(DataSource.class, (List) p);
-				} else
-					m.put(DataSource.class, file);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				ObjectInputStream ois = new ObjectInputStream(inputStream);
-				Map map = (Map) ois.readObject();
-				m.putAll(map);
-				m.put(DataSource.class, map.get("data"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-		if (inputStream != null)
-			IOUtils.closeQuietly(inputStream);
-
-		m.put("rest", true);
-		System.out.println(jasperFile.toString());
-		Object o = org.isobit.jreport.JR.open(jasperFile.toString(), m);
-		if (output == null) {
-			output = data.template + "." + data.extension;
-		}
-
-		filename = "report-" + new Date().getTime();
-		return javax.ws.rs.core.Response.ok(o, MediaType.APPLICATION_OCTET_STREAM)
-				.header("content-disposition", "attachment; filename = " + output).build();
-	}
 	/*
 	 * Map m = new HashMap(); String tempFile = (String) params.get("tempFile"); int
 	 * size = XUtil.intValue(params.get("size")); String type = (String)
@@ -481,7 +852,6 @@ m.put(DataSource.class, file);
 	 * MediaType.APPLICATION_OCTET_STREAM) .header("content-disposition",
 	 * "attachment; filename = " + filename+"."+params.get("-EXTENSION")) .build();
 	 */
-
 
 	@POST
 	@Path("v2")
@@ -546,5 +916,5 @@ m.put(DataSource.class, file);
 								"\"")
 				.build();
 	}
-	
+
 }

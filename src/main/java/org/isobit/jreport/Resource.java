@@ -479,4 +479,69 @@ m.put(DataSource.class, file);
 	 * "attachment; filename = " + filename+"."+params.get("-EXTENSION")) .build();
 	 */
 
+
+	@POST
+	@Path("v2")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response sendJsonDataV2(ReportRequestV2 data) {
+
+		Map<Object, Object> m = new HashMap<>();
+
+		String extension = data.extension != null
+				? data.extension
+				: "pdf";
+
+		m.put(
+				JR.EXTENSION,
+				extension);
+
+		if (data.parameters != null) {
+			m.putAll(data.parameters);
+		}
+
+		if (data.data != null) {
+			m.put(
+					DataSource.class,
+					data.data);
+		}
+
+		m.put(
+				"rest",
+				Boolean.TRUE);
+
+		JR.setUPLOAD_DIR(
+				uploadDir);
+
+		String jasperFile = data.template;
+
+		if (!jasperFile.endsWith(
+				".jasper")) {
+			jasperFile = jasperFile +
+					".jasper";
+		}
+
+		System.out.println(
+				"Jasper v2: " +
+						jasperFile);
+
+		Object result = org.isobit.jreport.JR.open(
+				jasperFile,
+				m);
+
+		String output = data.output;
+
+		if (output == null || output.trim().isEmpty()) {
+			output = data.template + "." + extension;
+		}
+
+		return Response
+				.ok(result, MediaType.APPLICATION_OCTET_STREAM)
+				.header(
+						"content-disposition",
+						"attachment; filename=\"" + output +
+								"\"")
+				.build();
+	}
+	
 }

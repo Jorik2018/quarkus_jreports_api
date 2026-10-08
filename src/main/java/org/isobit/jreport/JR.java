@@ -150,24 +150,6 @@ public class JR
     return open(template, m.getConfig());
   }
 
-  public static String getPath(String jasperFileName) throws IOException {
-    File f = (new File("")).getCanonicalFile();
-    if (f.getParentFile().getName().equals(X.PROJECTS_PATH)) {
-      jasperFileName = jasperFileName.replace("/", "\\");
-      File f2 = new File(f, "src\\java" + jasperFileName);
-      if (!f2.exists()) {
-        f2 = new File(f, "src" + jasperFileName);
-      }
-      if (!f2.exists()) {
-        f2 = new File(f.getParent(),
-            "/" + jasperFileName.replace("\\", "/").split("/")[3] + "/src" + jasperFileName);
-      }
-      return f2.getCanonicalPath();
-    }
-    X.log("=>" + jasperFileName);
-    return jasperFileName;
-  }
-
   public static Object open(JasperPrint jasperPrint, Object o) throws JRException {
     try {
       Map m = o instanceof Map ? (Map) o : new HashMap();
@@ -233,6 +215,24 @@ public class JR
       alert(e, map);
       throw new RuntimeException(e);
     }
+  }
+
+  public static String getPath(String jasperFileName) throws IOException {
+    File f = (new File("")).getCanonicalFile();
+    if (f.getParentFile().getName().equals(X.PROJECTS_PATH)) {
+      jasperFileName = jasperFileName.replace("/", "\\");
+      File f2 = new File(f, "src\\java" + jasperFileName);
+      if (!f2.exists()) {
+        f2 = new File(f, "src" + jasperFileName);
+      }
+      if (!f2.exists()) {
+        f2 = new File(f.getParent(),
+            "/" + jasperFileName.replace("\\", "/").split("/")[3] + "/src" + jasperFileName);
+      }
+      return f2.getCanonicalPath();
+    }
+    X.log("=>" + jasperFileName);
+    return jasperFileName;
   }
 
   public static Object alert(Exception e, Object params) {
@@ -489,40 +489,14 @@ public class JR
         reportDS = new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource((Collection) ds);
       } else if (ds instanceof File) {
         JsonDataSource json = new JsonDataSource((File) ds);
+        json.setDatePattern("yyyy-MM-dd'T'HH:mm:ss");
         json.setLocale(Locale.US);
         reportDS = json;
       } else if (ds instanceof java.nio.file.Path) {
-
         java.nio.file.Path path = (java.nio.file.Path) ds;
-
-        try {
-          System.out.println(
-              "===== JSON PATH =====");
-
-          System.out.println(
-              path.toAbsolutePath());
-
-          System.out.println(
-              "===== JSON CONTENT =====");
-
-          String content = java.nio.file.Files.readString(
-              path,
-              java.nio.charset.StandardCharsets.UTF_8);
-
-          System.out.println(content);
-
-          System.out.println(
-              "===== END JSON =====");
-
-        } catch (java.io.IOException e) {
-          e.printStackTrace();
-        }
-
-        JsonDataSource json = new JsonDataSource(
-            path.toFile());
+        JsonDataSource json = new JsonDataSource(path.toFile());
         json.setDatePattern("yyyy-MM-dd'T'HH:mm:ss");
         json.setLocale(Locale.US);
-
         reportDS = json;
       }
       if (map.containsKey("TOC")) {
@@ -619,7 +593,6 @@ public class JR
         }
         map.put("xyz", jaspertPrintList);
       } else {
-        System.out.println("reportDS=" + reportDS);
         masterJP = (reportDS != null
             ? JasperFillManager.fillReport(jasperReport, map, reportDS)
             : JasperFillManager.fillReport(jasperReport, map, (Connection) map.get("cnx")));
@@ -627,4 +600,5 @@ public class JR
     }
     return masterJP;
   }
+
 }

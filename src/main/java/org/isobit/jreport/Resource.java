@@ -129,24 +129,12 @@ public class Resource {
 			}
 
 			Map<Object, Object> parameters = new java.util.HashMap<>();
-
-			parameters.put(
-					JR.EXTENSION,
-					extension);
-
-			JR.setUPLOAD_DIR(
-					uploadDir);
-
+			parameters.put(JR.EXTENSION, extension);
+			JR.setUPLOAD_DIR(uploadDir);
 			String jasperFile = template;
-
 			if (!jasperFile.endsWith(".jasper")) {
 				jasperFile += ".jasper";
 			}
-
-			System.out.println("Jasper: " + jasperFile);
-			System.out.println("Filename: " + filename);
-			System.out.println("Output: " + output);
-
 			if (filename.toLowerCase().endsWith(".json")) {
 
 				tempFile = Files.createTempFile(
@@ -174,29 +162,20 @@ public class Resource {
 					} else if (parsed instanceof Map) {
 
 						Map<?, ?> jsonMap = (Map<?, ?>) parsed;
-
 						for (Map.Entry<?, ?> entry : jsonMap.entrySet()) {
 							parameters.put(entry.getKey(), entry.getValue());
 						}
-
 						Object data = parameters.remove("data");
-
-						System.out.println("Data: " + data);
-
 						try (OutputStream out = Files.newOutputStream(tempFile)) {
 							jsonb.toJson(data, out);
 						}
-
 						parameters.put(DataSource.class, tempFile);
-
 					} else if (parsed instanceof List) {
 						parameters.put(DataSource.class, parsed);
 
 					} else {
 
-						parameters.put(
-								DataSource.class,
-								file);
+						parameters.put(DataSource.class, file);
 					}
 				}
 
@@ -235,27 +214,29 @@ public class Resource {
 
 			parameters.put("rest", Boolean.TRUE);
 
-			Object result = JR.open(
-					jasperFile,
-					parameters);
+			Object result = JR.open(jasperFile, parameters);
 
-			if (output == null ||
-					output.trim().isEmpty()) {
-				output = template +
-						"." +
-						extension;
+			if (output == null || output.trim().isEmpty()) {
+				output = template + "." + extension;
 			}
 
-			return Response
-					.ok(
-							result,
-							MediaType.APPLICATION_OCTET_STREAM)
+			Response.ResponseBuilder response = Response.ok(
+					result,
+					MediaType.APPLICATION_OCTET_STREAM)
 					.header(
 							"Content-Disposition",
 							"attachment; filename=\"" +
 									output +
-									"\"")
-					.build();
+									"\"");
+
+			if (result instanceof byte[]) {
+
+				response.header(
+						"Content-Length",
+						((byte[]) result).length);
+			}
+
+			return response.build();
 
 		} catch (WebApplicationException e) {
 

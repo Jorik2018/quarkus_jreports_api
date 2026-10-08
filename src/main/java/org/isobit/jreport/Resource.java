@@ -214,30 +214,27 @@ public class Resource {
 
 			parameters.put("rest", Boolean.TRUE);
 
-			Object result = JR.open(jasperFile, parameters);
+			ReportOutput result = JR.open(
+					jasperFile,
+					parameters);
 
 			if (output == null || output.trim().isEmpty()) {
 				output = template + "." + extension;
 			}
 
-			Response.ResponseBuilder response = Response.ok(
-					result,
-					MediaType.APPLICATION_OCTET_STREAM)
+			return Response
+					.ok(
+							result.getStream(),
+							MediaType.APPLICATION_OCTET_STREAM)
 					.header(
 							"Content-Disposition",
 							"attachment; filename=\"" +
 									output +
-									"\"");
-
-									System.out.println("Content-Disposition: attachment; filename=\"" + result.getClass() + "\"");
-			if (result instanceof byte[]) {
-
-				response.header(
-						"Content-Length",
-						((byte[]) result).length);
-			}
-
-			return response.build();
+									"\"")
+					.header(
+							"Content-Length",
+							result.getLength())
+					.build();
 
 		} catch (WebApplicationException e) {
 

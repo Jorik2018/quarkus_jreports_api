@@ -197,22 +197,44 @@ public class JR
     }
   }
 
-  public static StreamingOutput open(JasperPrint masterJP, Map map) {
+  public static ReportOutput open(
+      JasperPrint masterJP,
+      Map map) {
     try {
-      String extension = (String) XUtil.isEmpty(map.remove(EXTENSION), "pdf");
 
-      byte[] a = export(masterJP, map, extension).toByteArray();
-      return output -> {
+      String extension = (String) XUtil.isEmpty(
+          map.remove(EXTENSION),
+          "pdf");
+
+      byte[] bytes = export(
+          masterJP,
+          map,
+          extension)
+          .toByteArray();
+
+      StreamingOutput stream = output -> {
         try {
-          output.write(a);
+          output.write(bytes);
           output.flush();
         } catch (IOException e) {
-          throw new WebApplicationException("File Not Found !!");
+          throw new WebApplicationException(
+              "File Not Found !!");
         }
       };
-    } catch (IOException | JRException e) {
+
+      return new ReportOutput(
+          stream,
+          bytes.length);
+
+    } catch (
+        IOException | JRException e) {
+
       e.printStackTrace();
-      alert(e, map);
+
+      alert(
+          e,
+          map);
+
       throw new RuntimeException(e);
     }
   }

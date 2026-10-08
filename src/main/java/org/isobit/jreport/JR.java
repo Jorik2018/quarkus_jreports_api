@@ -479,13 +479,13 @@ public class JR
         }
         if (type == DataSource.class) {
           if (v instanceof TableModel) {
-            map.put(entry.getKey(), v = new JRTableModelDataSource((TableModel) v));
+            map.put(entry.getKey(), new JRTableModelDataSource((TableModel) v));
           } else if (v instanceof Collection) {
-            map.put(entry.getKey(), v = new JRBeanCollectionDataSource((Collection) v));
+            map.put(entry.getKey(), new JRBeanCollectionDataSource((Collection) v));
           } else if (v instanceof Object[]) {
-            map.put(entry.getKey(), v = new JRBeanArrayDataSource((Object[]) v));
+            map.put(entry.getKey(), new JRBeanArrayDataSource((Object[]) v));
           } else if (v instanceof ResultSet) {
-            map.put(entry.getKey(), v = new JRResultSetDataSource((ResultSet) v));
+            map.put(entry.getKey(), new JRResultSetDataSource((ResultSet) v));
           }
         } else if (v instanceof Collection) {
           map.put(k, v = new JRBeanCollectionDataSource((Collection) v));
@@ -525,6 +525,8 @@ public class JR
         JsonDataSource json = new JsonDataSource(path.toFile());
         json.setDatePattern("yyyy-MM-dd'T'HH:mm:ss");
         json.setLocale(Locale.US);
+        map.put("net.sf.jasperreports.json.date.pattern", "yyyy-MM-dd'T'HH:mm:ss");
+        map.put("REPORT_LOCALE", Locale.US);
         reportDS = json;
       }
       if (map.containsKey("TOC")) {

@@ -32,7 +32,6 @@ import javax.swing.table.TableModel;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.StreamingOutput;
-
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
@@ -206,25 +205,32 @@ public class JR
           map.remove(EXTENSION),
           "pdf");
 
-      byte[] bytes = export(
+      ByteArrayOutputStream output = export(
           masterJP,
           map,
-          extension)
-          .toByteArray();
+          extension);
 
-      StreamingOutput stream = output -> {
+      long length = output.size();
+
+      StreamingOutput stream = httpOutput -> {
+
         try {
-          output.write(bytes);
-          output.flush();
+
+          output.writeTo(
+              httpOutput);
+
+          httpOutput.flush();
+
         } catch (IOException e) {
+
           throw new WebApplicationException(
-              "File Not Found !!");
+              "Error writing report");
         }
       };
 
       return new ReportOutput(
           stream,
-          bytes.length);
+          length);
 
     } catch (
         IOException | JRException e) {

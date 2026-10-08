@@ -13,18 +13,12 @@ dependencies {
     implementation 'io.quarkus:quarkus-rest-client-jsonb'
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-resteasy'
-    //implementation 'org.jboss.resteasy:resteasy-client'
-    // https://mvnrepository.com/artifact/io.quarkus/quarkus-rest-client
 	implementation 'io.quarkus:quarkus-rest-client'
-    
     implementation 'com.google.code.gson:gson:2.10.1'
-    /*implementation 'org.jboss.resteasy:resteasy-multipart-provider'*/
 	implementation 'io.quarkus:quarkus-resteasy-multipart'
 	implementation 'io.quarkus:quarkus-resteasy-jsonb'
-	//implementation 'net.sf.jasperreports:jasperreports:6.19.1'
-	// https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
 	implementation 'net.sf.jasperreports:jasperreports:6.21.3'
-
+	implementation 'net.sf.jasperreports:jasperreports-fonts:6.21.3'
 	implementation 'com.itextpdf:itextpdf:5.5.13.3'
 	implementation 'com.lowagie:itext:4.2.1'
 
@@ -53,19 +47,11 @@ dependencies {
 	implementation files('E:/projects/java/lib/poi-4.1.0/ooxml-lib/xmlbeans-3.1.0.jar')
 	implementation files('E:/projects/java/lib/poi-4.1.0/lib/commons-compress-1.18.jar')
 	*/
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
-implementation 'org.apache.commons:commons-collections4:4.4'
-
-// https://mvnrepository.com/artifact/org.apache.poi/poi
-implementation 'org.apache.poi:poi:5.2.2'
-// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-implementation 'org.apache.poi:poi-ooxml:5.2.2'
-// https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans
-implementation 'org.apache.xmlbeans:xmlbeans:5.0.3'
-// https://mvnrepository.com/artifact/org.apache.commons/commons-compress
-implementation 'org.apache.commons:commons-compress:1.21'
-
-	
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'org.apache.poi:poi:5.2.2'
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'org.apache.xmlbeans:xmlbeans:5.0.3'
+    implementation 'org.apache.commons:commons-compress:1.21'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
 }

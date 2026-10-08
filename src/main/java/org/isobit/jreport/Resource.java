@@ -229,6 +229,7 @@ public class Resource {
 									output +
 									"\"");
 
+									System.out.println("Content-Disposition: attachment; filename=\"" + result.getClass() + "\"");
 			if (result instanceof byte[]) {
 
 				response.header(

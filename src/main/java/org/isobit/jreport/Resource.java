@@ -214,7 +214,7 @@ public class Resource {
 
 			parameters.put("rest", Boolean.TRUE);
 
-			ReportOutput result = JR.open(
+			ReportOutput result = (ReportOutput) JR.open(
 					jasperFile,
 					parameters);
 

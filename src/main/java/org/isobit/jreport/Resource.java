@@ -75,7 +75,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 public class Resource {
 
 	@POST
-	@Path("v2")
+	@Path("")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@javax.ws.rs.Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response sendMultipartData(
@@ -381,7 +381,7 @@ public class Resource {
 	}
 
 	@POST
-	@Path("")
+	@Path("v")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	// @Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Object sendMultipartData(@MultipartForm MultipartBody data) {
@@ -440,6 +440,7 @@ public class Resource {
 					System.out.println(m.get(DataSource.class));
 					System.out.println(m.keySet());
 				} else if (p instanceof List) {
+					//aqui esta entrando
 					System.out.println("====" + new ObjectMapper().writeValueAsString(p));
 					m.put(DataSource.class, (List) p);
 				} else
@@ -464,6 +465,7 @@ public class Resource {
 
 		m.put("rest", true);
 		System.out.println(jasperFile.toString());
+
 		Object o = org.isobit.jreport.JR.open(jasperFile.toString(), m);
 		if (output == null) {
 			output = data.template + "." + data.extension;
